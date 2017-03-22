@@ -33,9 +33,12 @@
 								session_start();
 							}
 							
-							if (isset($_SESSION["user_id"]) && $_SESSION["user_id"] != ''){  
+							if (isset($_SESSION["user_id"]) && $_SESSION["user_id"] != ''){ 
+                                
+                                // Display create task in navbar								
 								printf("<li class=\"active\"><a href=\"./createtask.php\">Create Task</a></li>");
-								printf("<li><a href=\"./logout.php\">Logout</a></li>");	
+								printf("<li><a href=\"./register.php\">Register</a></li>");
+								//printf("<li><a href=\"./logout.php\">Logout</a></li>");	
 							} else {
 								printf("<li><a href=\"./login.php\">Login</a></li>");
 							}
@@ -69,24 +72,11 @@
 				}
 
         ?>
-		<!-- To fix -------------->
-		<ul class="actions small">
-			<?php
-			    if (!isset ($_SESSION)) {
-					session_start();
-				}
-							
-				if (isset($_SESSION["user_id"]) && $_SESSION["user_id"] != ''){ 
-				?>
-				
-				<?php } ?>
-				
-				</ul>
-				
+		
 				
 		<!-- Create Task Form ------------>
 		<div class="container">	    
-			        <form action="createtask.php" method="post">
+			        <form  enctype="multipart/form-data" action="createtask.php" method="post">
 					    <fieldset>
 						    <div class="col-md-6">
 						    <h2>Create Task</h2>
@@ -135,6 +125,15 @@
 						        <label> Deadline Completion:</label>
 							    <input class="form-control" name="deadline_completion" placeholder="" type="text" "required"/>
 						    </div>
+							<div  class="form-group">
+							    <label>Last Name:<br /></label> 
+							    <input type="text" class="form-control" name="name" value="" /><br />
+							</div>
+							<div class="form-group">
+							<label>Class Notes:<br /></label> 
+							<input type="file" name="classnotes" value="" /><br />
+							<button type="submit" class="btn btn-primary" name="submit" value="Submit Notes" />Submit Notes</button>
+							</div>
 						    <div class="form-group">
 							    <button type="submit" class="btn btn-success">Create Task</button>
 						    </div>
@@ -144,8 +143,37 @@
                 </div>
 
         <!-- End Task Form ------------------------------------------>
+		
+		<!-- Uploadmanager ------>
+		 <?php
+    define ("FILEREPOSITORY","C://file_uploads"); //Set a constant
+    
+    
+    if (is_uploaded_file($_FILES['classnotes']['tmp_name'])) { //file posted?
+
+        $finfo = finfo_open(FILEINFO_MIME_TYPE);
+        $mime = finfo_file($finfo, $_FILES['classnotes']['tmp_name']);
+
+        if ($mime != "application/pdf") { //is it a pdf?
+            echo "<p>Class notes must be uploaded in PDF format.</p>"; 
+        
+        } else { /* move uploaded file to final destination. */
+            
+            $name = $_POST['name'];
+            $result = move_uploaded_file($_FILES['classnotes']['tmp_name'],  FILEREPOSITORY."//$name.pdf");
+            
+            if ($result == 1) {
+                echo "<p>File successfully uploaded.</p>";
+            } else {
+                echo "<p>There was a problem uploading the file.</p>";
+            }
+        } //endIF
+    } //endIF
+    ?>
+	
+	<!-- End Uploadmanager ----->
 				
-		<!-- End Main page -->
+    <!-- End Main page -->
 		 		
 		<!-- Footer ------------------------------------------------------------------------->
 		<footer id="footer">				
