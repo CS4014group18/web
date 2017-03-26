@@ -27,20 +27,17 @@
 				 
 				<div class="collapse navbar-collapse navHeaderCollapse">				     
 					<ul class="nav navbar-nav navbar-right">
-					    <li class="active"><a href="index.php">Home</a></li>
+					    <li><a href="index.php">Home</a></li>
 						<?php 
 							if (!isset($_SESSION)) {
 							    session_start();							
 							}				
-							if (isset($_SESSION["user_id"]) && $_SESSION["user_id"] != ''){
-
+							if (isset($_SESSION["user_id"]) && $_SESSION["user_id"] != ''){ 
 							    printf("<li><a href=\"./logout.php\">Logout</a></li>");
-							   
-							    
 							} 
 							else 
 							{
-								 printf("<li><a href=\"./register.php\">Register</a></li>");
+								printf("<li><a href=\"./register.php\">Register</a></li>");
 							}
 						?>					     
 					</ul>
@@ -83,28 +80,25 @@
 				    }
 			    } catch (PDOException $exception) {
 			            printf("Connection error: %s", $exception->getMessage());
-			        }
+					}
 		    }
         ?>        
 		<!-- Login form -->
 		 <div class="container">
-				
+				<h2>Login</h2>
 			    <form action="login.php" method="post">
-					<fieldset>
-					    <div class="col-md-3">
-						    <h2>Login</h2>
-							<div class="form-group">
-								<input autofocus class="form-control" name="id" placeholder="ID" type="text"/>
-							</div>
-							
-							<div class="form-group">
-								<input class="form-control" name="password" placeholder="Password" type="password"/>
-							</div>
-							
-							<div class="form-group">
-								<button type="submit" class="btn btn-success">Login</button>
-								
-							</div>
+					<fieldset>						
+						<div class="form-group">
+							<input autofocus class="form-control" name="id" placeholder="ID" type="text"/>
+						</div>
+						
+						<div class="form-group">
+							<input class="form-control" name="password" placeholder="Password" type="password"/>
+						</div>
+						
+						<div class="form-group">
+							<button type="submit" class="btn btn-default">Login</button>
+							<!--<label>Don't have account yet ! <a href="./register.php">Sign Up</a></label>-->
 						</div>
 					</fieldset>
 				</form>			

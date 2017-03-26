@@ -32,14 +32,10 @@
 							    if (!isset ($_SESSION)) {
 								    session_start();		
 							    }							
-							    if (isset($_SESSION["user_id"]) && $_SESSION["user_id"] != ''){
-
+							    if (isset($_SESSION["user_id"]) && $_SESSION["user_id"] != ''){ 
+							        printf("<li><a href=\"./logout.php\">Logout</a></li>");
+							    } else {
 								    printf("<li><a href=\"./login.php\">Login</a></li>");
-							       
-							    } 
-								else 
-								{
-								    printf("<li><a href=\"./logout.php\">Logout</a></li>");
 							    }
 							?>				 
 					</ul>
@@ -50,7 +46,6 @@
 
 		<!-- Main -->
 		<div id="main">
-			
             <?php
                 if (isset($_POST) && count ($_POST) > 0) {
 	                $firstName = htmlspecialchars(ucfirst(trim($_POST["firstname"])));
@@ -62,6 +57,7 @@
 	                $passTwo = $_POST["confirm_password"];
 					$emailOne = $_POST["email"];
 	                $emailTwo = $_POST["confirm_email"];
+					$reputation = 0;
 		
 	                //check whether user/email alerady exists
 	                $dbh = new PDO("mysql:host=localhost;dbname=group18", "root", "");
@@ -83,11 +79,11 @@
 		                    } 
 							else 
 							{
-			                    $query = "INSERT INTO user SET id = :id, email = :email, firstname = :firstname, lastname = :lastname, password = :password, major = :major";
+			                    $query = "INSERT INTO user SET id = :id, email = :email, firstname = :firstname, lastname = :lastname, password = :password, reputation = :reputation, major = :major";
 			                    $stmt = $dbh->prepare($query);
 			                    $siteSalt  = "proofreader";
 			                    $saltedHash = hash('sha256', $passOne.$siteSalt);
-			                    $affectedRows = $stmt->execute(array(':id' => $id, ':email' => $email, ':firstname' => $firstName, ':lastname' => $lastName, ':password' => $saltedHash, ':major' => $major));
+			                    $affectedRows = $stmt->execute(array(':id' => $id, ':email' => $email, ':firstname' => $firstName, ':lastname' => $lastName, ':password' => $saltedHash, ':reputation' => $reputation, ':major' => $major));
 			
 			                    if ($affectedRows > 0) {
 					                $insertId = $dbh->lastInsertId();
@@ -112,8 +108,7 @@
 		        <div class="container">	    
 			        <form action="register.php" method="post">
 					    <fieldset>
-						    <div class="col-md-3">
-						    <h2>Sign up</h2>
+						<h2>Sign up</h2>
 						    <div class="form-group">
 						        <label> First name*:</label>
 							    <input autofocus class="form-control" name="firstname" placeholder="First Name" "required" type="text" />
@@ -157,9 +152,8 @@
 							    <input class="form-control" name="confirm_password" placeholder="Confirm Password" type="password"/>
 						    </div>
 						    <div class="form-group">
-							    <button type="submit" class="btn btn-success">Register</button>
+							    <button type="submit" class="btn btn-default">Register</button>
 						    </div>
-							</div>
 					    </fieldset>
 				    </form>			
 		        </div>

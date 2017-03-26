@@ -32,18 +32,31 @@
 						if (!isset($_SESSION)) {
 							session_start();							
 						}	
-						if (isset($_SESSION["user_id"]) && $_SESSION["user_id"] != ''){ 
-							
-							// Display Register and Login in Navbar
-							printf("<li><a href=\"./register.php\">Register</a></li>");
-							printf("<li><a href=\"./login.php\">Login</a></li>");
-							
-							
-						} 
-						else 
-						{
+						if (isset($_SESSION["user_id"]) && $_SESSION["user_id"] != ''){
+							$id = $_SESSION["user_id"];	
+							printf("<li><a href=\"./createtask.php\">Create Task</a></li>");
+						    printf("<li><a href=\"./tasklist.php\">Task Stream</a></li>");
+							printf("<li><a href=\"./mytask.php\">My Tasks</a></li>");
+							try {
+									$dbh = new PDO("mysql:host=localhost;dbname=group18", "root", "");
+									$query = "SELECT Reputation FROM user where id = :id";									
+									$stmt = $dbh->prepare($query);
+									$stmt->bindValue(':id', $id);
+									$stmt->execute();
+									$row = $stmt->fetch(PDO::FETCH_ASSOC);
+									$reputation = $row['Reputation'];
+									if ($reputation >= 40) {
+										printf("<li><a href=\"flaggedtask.php\">Flagged Tasks</a></li>");
+									}
+								}
+								catch (PDOException $exception) {
+									printf("Connection error: %s", $exception->getMessage());
+								}
 							printf("<li><a href=\"./logout.php\">Logout</a></li>");
-						   
+						} else 
+						{
+							printf("<li><a href=\"./login.php\">Login</a></li>");
+						    printf("<li><a href=\"./register.php\">Register</a></li>");
 					    }
 						?>		 
 					</ul>
@@ -51,7 +64,7 @@
 			</div>
 		</div>		 
 		<!-- End Nav bar -->
-		 		
+		 <h2>Welcome to ProofReader</h2>		
 		<!-- Footer -->
 		<footer id="footer">				
 		</footer>

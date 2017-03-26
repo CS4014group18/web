@@ -58,7 +58,7 @@
                 setcookie(session_name(),'',0,'/');
                 session_regenerate_id(true);	
             ?>
-			<h2>You have been logged out !</h2>								
+			<h2>You have been logged out.</h2>								
 		</div>
 
 		<!-- Footer -->

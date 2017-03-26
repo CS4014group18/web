@@ -8,11 +8,11 @@
 	</head>
 	
 	<body>	
-		<!-- Header -->
+		<!-- Header ------------------------------------------------------------------------------->
 		<header id="header" class="alt">
 		</header>	
 		
-		<!-- Nav bar --->
+		<!-- Nav bar ------------------------------------------------------------------------------>
 		<div class="navbar navbar-inverse navbar-static-top">
 		    <div class="container">
 			 
@@ -27,108 +27,176 @@
 				 
 				<div class="collapse navbar-collapse navHeaderCollapse">				     
 					<ul class="nav navbar-nav navbar-right">					     
-						<li class="active"><a href="index.php">Home</a></li>
+						<li><a href="index.php">Home</a></li>
 						<?php 
 							if (!isset ($_SESSION)) {
 								session_start();
-							}
-							
+							}						
 							if (isset($_SESSION["user_id"]) && $_SESSION["user_id"] != ''){ 
-                                								
-								printf("<li class=\"active\"><a href=\"./createtask.php\">Create Task</a></li>");
-								printf("<li><a href=\"./register.php\">Register</a></li>");
-								//printf("<li><a href=\"./logout.php\">Logout</a></li>");	
+								$id = $_SESSION["user_id"];	
+                                printf("<li><a href=\"./createtask.php\">Create Task</a></li>");
+								printf("<li class=\"active\"><a href=\"./tasklist.php\">Task Stream</a></li>");
+								printf("<li><a href=\"./mytask.php\">My Tasks</a></li>");
+								try {
+									$dbh = new PDO("mysql:host=localhost;dbname=group18", "root", "");
+									$query = "SELECT Reputation FROM user where id = :id";									
+									$stmt = $dbh->prepare($query);
+									$stmt->bindValue(':id', $id);
+									$stmt->execute();
+									$row = $stmt->fetch(PDO::FETCH_ASSOC);
+									$reputation = $row['Reputation'];
+									if ($reputation >= 40) {
+										printf("<li><a href=\"flaggedtask.php\">Flagged Tasks</a></li>");
+									}
+								}
+								catch (PDOException $exception) {
+									printf("Connection error: %s", $exception->getMessage());
+								}
+								printf("<li><a href=\"./logout.php\">Logout</a></li>");	
 							} else {
 								printf("<li><a href=\"./login.php\">Login</a></li>");
+								printf("<li><a href=\"./Register.php\">Register</a></li>");
 							}
 							?>
 					</ul>
 				</div>				 
 			</div>
 		</div>		 
-		<!-- End Nav bar ------------------------------------------------------------------->
+		<!-- End Nav bar -------------------------------------------------------------------------->
 		
-		<!-- Main page ------------------------------------------------------------------------>
-		<?php
-				if (isset($_GET["id"])) {
-					$id = $_GET["id"];
-					try {
-						$dbh = new PDO("mysql:host=localhost;dbname=group18", "root", "");
-						/*$stmt = $dbh->prepare("SELECT title, description FROM `task` WHERE id=:id" );
-						$stmt->bindValue(':id', $id);
-						$stmt->execute();
-						$row = $stmt->fetch(PDO::FETCH_ASSOC);
-						
-						if ($row) {
-							printf("<h2> %s </h2> <p> %s </p>\n", $row["title"], $row["description"]);
-						} else {
-							printf("Task not found.");
-						}*/
-					} catch (PDOException $exception) {
-						printf("Connection error: %s", $exception->getMessage());
-				
+		<!-- Main page ---------------------------------------------------------------------------->
+		<?php	
+			if (isset($_POST) && count ($_POST) > 0) {
+				if (isset($_SESSION["user_id"])) {
+					$id = $_SESSION["user_id"];
+					if (isset($_POST['claim']) && isset($_POST["taskno"])) {
+						//claim
+						$taskno = $_POST["taskno"];
+						//printf("Task: %s\n",$taskno);
+						try {
+								$dbh = new PDO("mysql:host=localhost;dbname=group18", "root", "");
+								$query = "SELECT idStatusName FROM statusname WHERE status='CLAIMED'";
+								$stmt = $dbh->prepare($query);
+								$stmt->execute();
+								$row = $stmt->fetch(PDO::FETCH_ASSOC);
+								$idstatus = $row['idStatusName'];
+								//printf("status %s",$idstatus);
+								$date = date ("Y/m/d H:i:s");
+								//printf("date %s",$date);
+								//idStatus 	TaskNo 	StatusName 	Date 
+								$query = "INSERT INTO status SET TaskNo = :taskno, StatusName = :statusname, Date = :date";
+								$stmt = $dbh->prepare($query);
+								$affectedRows = $stmt->execute(array(':taskno' => $taskno, ':statusname' => $idstatus, ':date' => $date));
+								$query = "INSERT INTO claimed SET ID = :id, TaskNo = :taskno, Date = :date";
+								$stmt = $dbh->prepare($query);
+								$affectedRows = $stmt->execute(array(':id' => $id,':taskno' => $taskno, ':date' => $date));
+								printf("<h2>Task Claimed</h2>");
+						} catch (PDOException $exception) {
+								printf("Connection error: %s", $exception->getMessage());
+							}
+					} else if (isset($_POST['inappropriate']) && isset($_POST["taskno"])) {
+						//inappropriate
+						$taskno = $_POST["taskno"];
+						try {
+							$dbh = new PDO("mysql:host=localhost;dbname=group18", "root", "");
+							$query = "SELECT idstatusname FROM statusname WHERE status='INAPPROPRIATE'";
+							$stmt = $dbh->prepare($query);
+							$stmt->execute();
+							$row = $stmt->fetch(PDO::FETCH_ASSOC);
+							$idstatus = $row['idstatusname'];
+							$date = date ("Y/m/d H:i:s");
+							//printf("date %s",$date);
+							//idStatus 	TaskNo 	StatusName 	Date 
+							$query = "INSERT INTO status SET TaskNo = :taskno, StatusName = :statusname, Date = :date";
+							$stmt = $dbh->prepare($query);
+							$affectedRows = $stmt->execute(array(':taskno' => $taskno, ':statusname' => $idstatus, ':date' => $date));
+							printf("<h2>Task Status changed to inappropriate</h2>");
+						} catch (PDOException $exception) {
+							printf("Connection error: %s", $exception->getMessage());
+						}
+					} else {	
+					//no button pressed
 					}
 				}
-
-        ?>
-
-<div class="container">	    
-	<form  action="taskpage.php" method="post">
-		<fieldset>
-			<div class="row">
-			   <div class="col-md-offset-3 col-md-6">
-				  <h2>My Task</h2>
-					<div class="form-group">
-						    <label> Title:</label>
-							<input autofocus class="form-control" name="title" placeholder="Title" "required" type="text" />
-						    </div>
-						    <div class="form-group">
-						        <label> Description:</label>
-							    <textarea class="form-control" rows="5" id="description" placeholder="Description" "required"></textarea>
-						    </div>
-						    <div class="form-group">
-						        <label> Tag 1:</label>
-							    <input autofocus class="form-control" name="tag1" placeholder="Tag 1" "required" type="text" />
-						    </div>
-						    <div class="form-group">
-						        <label> Tag 2:</label>
-							    <input autofocus class="form-control" name="tag2" placeholder="Tag 2" "required" type="text" />
-		                    
-						    </div>
-						    <div class="form-group">
-						        <label> Tag 3:</label>
-							    <input autofocus class="form-control" name="tag3" placeholder="Tag 3" type="text" "required"/>
-						    </div>
-						    <div class="form-group">
-						        <label> Tag 4:</label>
-							    <input class="form-control" name="tag4" placeholder="Tag 4" type="text" "required"/>
-						    </div>
-						    <div class="form-group">
-						        <label> Number of page(s):</label>
-							    <input class="form-control" name="pagenumber" placeholder="" type="text" "required"/>
-						    </div>
-						    <div class="form-group">
-						        <label> Number of words:</label>
-							    <input class="form-control" name="wordnumber" placeholder="" type="text"/ "required">
-						    </div>
-							
-						    <div class="form-group">
-							    <button type="submit" class="btn btn-success">Claim</button>
-						    </div>
+			}
+		?>
+		<div class="container">	    
+			<form action="taskpage.php" method="post">
+				<fieldset>											 
+					<div class="row">								 
+					   <div class="col-md-offset-3 col-md-6">        	
+							<?php	
+								//if (!isset($_POST)) {
+									if (isset($_GET["taskno"])) {
+										$taskno = $_GET["taskno"];
+										try {
+											$dbh = new PDO("mysql:host=localhost;dbname=group18", "root", "");
+											$stmt = $dbh->prepare("SELECT title, description, pages, words FROM `task` WHERE idTaskno=:taskno" );
+											$stmt->bindValue(':taskno', $taskno);
+											$stmt->execute();
+											$row = $stmt->fetch(PDO::FETCH_ASSOC);
+									
+											if ($row) {
+												printf("<h2>Title: %s </h2><h2>Description:</h2> <h2>%s</h2>", $row["title"], $row["description"]);
+												printf("<h2>Pages: %s </h2><h2>Words: %s</h2>", $row["pages"], $row["words"]);
+												printf("<input type='hidden' name='taskno' value=%s />",$taskno);
+											} else {
+												printf("Task not found.");
+											}
+										} catch (PDOException $exception) {
+											printf("Connection error: %s", $exception->getMessage());
+										}
+									}
+								//}
+							?>
 							<div class="form-group">
-							    <button type="submit" class="btn btn-success">Inappropriate</button>
-						    </div>
-							</div>
-						  </div>
-					    </fieldset>
-				    </form>
-                </div>
-				
-<!-- Footer ------------------------------------------------------------------------->
+	
+							<?php	
+								if (!isset($_POST['claim']) && !isset($_POST['inappropriate'])) {
+									if (isset($_SESSION["user_id"])) {
+										$id = $_SESSION["user_id"];
+										//printf("id %s",$id);
+										/*try {
+											$dbh = new PDO("mysql:host=localhost;dbname=group18", "root", "");
+											$query = "SELECT Reputation FROM user where id = :id";									
+											$stmt = $dbh->prepare($query);
+											$stmt->bindValue(':id', $id);
+											$stmt->execute();
+											$row = $stmt->fetch(PDO::FETCH_ASSOC);
+											$reputation = $row['Reputation'];
+											printf("<div class='form-group'>");
+											printf("<button type='submit' class='btn btn-success' name='claim'>claim</button>");
+											printf("</div>");
+											if ($reputation >= 40) {
+												printf("<div class='form-group'>");
+												printf("<button type='submit' class='btn btn-success' name='inappropriate'>Inappropriate</button>");
+												printf("</div>");
+											}
+										} catch (PDOException $exception) {
+												printf("Connection error: %s", $exception->getMessage());
+										}*/
+										printf("<div class='form-group'>");
+										printf("<button type='submit' class='btn btn-success' name='claim'>claim</button>");
+										printf("</div>");
+										printf("<div class='form-group'>");
+										printf("<button type='submit' class='btn btn-success' name='inappropriate'>Inappropriate</button>");
+										printf("</div>");
+										
+									}
+								}
+							?>	
+							</div> 							
+						</div>
+					</div>
+				</fieldset>
+			</form>
+		</div>
+						
+		<!-- Footer ------------------------------------------------------------------------------->
 		<footer id="footer">				
 		</footer>
 
-		<!-- Scripts -->	
+		<!-- Scripts ------------------------------------------------------------------------------>	
 	    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 		<script src="js/bootstrap.js"></script>
 	</body>
