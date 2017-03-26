@@ -8,17 +8,17 @@
 	</head>
 	
 	<body>	
-		<!-- Header -->
+		<!-- Header ------------------------------------------------------------------------------->
 		<header id="header" class="alt">
 		</header>	
 		
-		<!-- Nav bar --->
+		<!-- Nav bar ------------------------------------------------------------------------------>
 		<div class="navbar navbar-inverse navbar-static-top">
 		    <div class="container">
 			 
 			    <a href="" class="navbar-brand">Proofreading Website</a>
 				 
-				<!-- Mobile responsiveness -->
+				<!-- Mobile responsiveness -------------------------------------------------------->
 				<button class="navbar-toggle" data-toggle="collapse" data-target=".navHeaderCollapse">
 				    <span class="icon-bar"></span>
 					<span class="icon-bar"></span>
@@ -37,6 +37,7 @@
 							printf("<li><a href=\"./createtask.php\">Create Task</a></li>");
 						    printf("<li><a href=\"./tasklist.php\">Task Stream</a></li>");
 							printf("<li><a href=\"./mytask.php\">My Tasks</a></li>");
+							printf("<li><a href=\"./claimedtask.php\">Claimed Tasks</a></li>");
 							try {
 									$dbh = new PDO("mysql:host=localhost;dbname=group18", "root", "");
 									$query = "SELECT Reputation FROM user where id = :id";									
@@ -63,13 +64,16 @@
 				</div>				 
 			</div>
 		</div>		 
-		<!-- End Nav bar -->
-		 <h2>Welcome to ProofReader</h2>		
-		<!-- Footer -->
+		<!-- End Nav bar -------------------------------------------------------------------------->
+		<div class="container">	    
+			<h2>Welcome to ProofReader</h2>
+		</div>
+		
+		<!-- Footer ------------------------------------------------------------------------------->
 		<footer id="footer">				
 		</footer>
 
-		<!-- Scripts -->	
+		<!-- Scripts ------------------------------------------------------------------------------>	
 	    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 		<script src="js/bootstrap.js"></script>
 	</body>

@@ -38,6 +38,7 @@
 								printf("<li><a href=\"./createtask.php\">Create Task</a></li>");
 								printf("<li><a href=\"./tasklist.php\">Task Stream</a></li>");
 								printf("<li class=\"active\"><a href=\"./mytask.php\">My Tasks</a></li>");
+								printf("<li><a href=\"./claimedtask.php\">Claimed Tasks</a></li>");
 								try {
 									$dbh = new PDO("mysql:host=localhost;dbname=group18", "root", "");
 									$query = "SELECT Reputation FROM user where id = :id";									
@@ -69,7 +70,7 @@
 
 		<!--Create Table -------------------------------------------------------------------------->
 		<div class="container">	    	
-			<h2>My Task </h2>                              
+			<h2>My Tasks </h2>                              
 			<table class="table table-responsive table-hover">
 				<thead>
 					<tr>

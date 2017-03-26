@@ -36,6 +36,7 @@
 								$id = $_SESSION["user_id"];	
 								printf("<li class=\"active\"><a href=\"./createtask.php\">Create Task</a></li>");
 								printf("<li><a href=\"./tasklist.php\">Task Stream</a></li>");
+								printf("<li><a href=\"./claimedtask.php\">Claimed Tasks</a></li>");
 								try {
 									$dbh = new PDO("mysql:host=localhost;dbname=group18", "root", "");
 									$query = "SELECT Reputation FROM user where id = :id";									
