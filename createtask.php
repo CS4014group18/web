@@ -16,7 +16,7 @@
 		<div class="navbar navbar-inverse navbar-static-top">
 		    <div class="container">
 			 
-			    <a href="" class="navbar-brand">Proofreading Website</a>
+			    <a href="index.php" class="navbar-brand">Proofreading Website</a>
 				 
 				<!-- Mobile responsiveness -------------------------------------------------------->
 				<button class="navbar-toggle" data-toggle="collapse" data-target=".navHeaderCollapse">
@@ -36,7 +36,9 @@
 								$id = $_SESSION["user_id"];	
 								printf("<li class=\"active\"><a href=\"./createtask.php\">Create Task</a></li>");
 								printf("<li><a href=\"./tasklist.php\">Task Stream</a></li>");
+								printf("<li><a href=\"./mytask.php\">My Tasks</a></li>");
 								printf("<li><a href=\"./claimedtask.php\">Claimed Tasks</a></li>");
+								
 								try {
 									$dbh = new PDO("mysql:host=localhost;dbname=group18", "root", "");
 									$query = "SELECT Reputation FROM user where id = :id";									
@@ -166,7 +168,8 @@
 				<div class="container">	    
 			        <form enctype="multipart/form-data" action="createtask.php" method="post" >
 					    <fieldset>
-						    <div class="col-md-6">
+						   <div class="row">
+						    <div class="col-md-offset-3 col-md-6">
 						    <h2>Create Task</h2>
 						    <div class="form-group">
 						        <label> Title:</label>
@@ -223,6 +226,7 @@
 							    <button type="submit" class="btn btn-success">Create Task</button>
 						    </div>
 							</div>
+							</div>
 					    </fieldset>
 				    </form>
                 </div>
@@ -236,7 +240,7 @@
 		<?php 
 			if (isset($_POST) && count ($_POST) > 0) {
 				/*define ("FILEREPOSITORY","C://inetpub//wwwroot//modules//cs4014//group18//uploads"); //Set a constant*/
-				define ("FILEREPOSITORY","uploads/");
+				define ("FILEREPOSITORY","C://file_uploads/");
 				if (is_uploaded_file($_FILES['userfile']['tmp_name'])) { //file posted?
 
 					$finfo = finfo_open(FILEINFO_MIME_TYPE);
@@ -247,7 +251,7 @@
 					} else { // move uploaded file to final destination. 
 						
 						$name = $_FILES['userfile']['name'];
-						$result = move_uploaded_file($_FILES['userfile']['tmp_name'],  FILEREPOSITORY."$name.pdf");
+						$result = move_uploaded_file($_FILES['userfile']['tmp_name'],  FILEREPOSITORY."$name");
             
 						if ($result == 1) {
 							echo "<p>File successfully uploaded.</p>";

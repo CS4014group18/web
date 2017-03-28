@@ -16,7 +16,7 @@
 		<div class="navbar navbar-inverse navbar-static-top">
 		    <div class="container">
 			 
-			    <a href="" class="navbar-brand">Proofreading Website</a>
+			    <a href="index.php" class="navbar-brand">Proofreading Website</a>
 				 
 				<!-- Mobile responsiveness -->
 				<button class="navbar-toggle" data-toggle="collapse" data-target=".navHeaderCollapse">
@@ -85,9 +85,12 @@
         ?>        
 		<!-- Login form -->
 		 <div class="container">
-				<h2>Login</h2>
+				
 			    <form action="login.php" method="post">
-					<fieldset>						
+					<fieldset>
+                      <div class="row">
+					    <div class="col-md-offset-3 col-md-3">
+						<h2>Login</h2>
 						<div class="form-group">
 							<input autofocus class="form-control" name="id" placeholder="ID" type="text"/>
 						</div>
@@ -97,8 +100,10 @@
 						</div>
 						
 						<div class="form-group">
-							<button type="submit" class="btn btn-default">Login</button>
+							<button type="submit" class="btn btn-success">Login</button>
 							<!--<label>Don't have account yet ! <a href="./register.php">Sign Up</a></label>-->
+						</div>
+						</div>
 						</div>
 					</fieldset>
 				</form>			

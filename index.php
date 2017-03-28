@@ -16,7 +16,7 @@
 		<div class="navbar navbar-inverse navbar-static-top">
 		    <div class="container">
 			 
-			    <a href="" class="navbar-brand">Proofreading Website</a>
+			    <a href="index.php" class="navbar-brand">Proofreading Website</a>
 				 
 				<!-- Mobile responsiveness -------------------------------------------------------->
 				<button class="navbar-toggle" data-toggle="collapse" data-target=".navHeaderCollapse">
@@ -65,8 +65,16 @@
 			</div>
 		</div>		 
 		<!-- End Nav bar -------------------------------------------------------------------------->
-		<div class="container">	    
+		<div class="container">
+          <div class="row">
+            <div class="col-md-offset-4 col-md-4 ">		  
 			<h2>Welcome to ProofReader</h2>
+			<?php
+						if (!isset($_SESSION["user_id"]))
+							printf("<h2>Please <a href=\"login.php\">Log in</a> or <a href=\"./register.php\">Sign up</a><br/></h2>");
+				   ?>
+		</div>
+		</div>
 		</div>
 		
 		<!-- Footer ------------------------------------------------------------------------------->

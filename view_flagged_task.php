@@ -16,7 +16,7 @@
 		<div class="navbar navbar-inverse navbar-static-top">
 		    <div class="container">
 			 
-			    <a href="" class="navbar-brand">Proofreading Website</a>
+			    <a href="index.php" class="navbar-brand">Proofreading Website</a>
 				 
 				<!-- Mobile responsiveness -->
 				<button class="navbar-toggle" data-toggle="collapse" data-target=".navHeaderCollapse">

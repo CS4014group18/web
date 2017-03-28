@@ -15,7 +15,7 @@
 		<!-- Nav bar --->
 		<div class="navbar navbar-inverse navbar-static-top">
 		    <div class="container">			 
-			    <a href="" class="navbar-brand">Proofreading Website</a>
+			    <a href="index.php" class="navbar-brand">Proofreading Website</a>
 				 
 				<!-- Mobile responsiveness -->
 				<button class="navbar-toggle" data-toggle="collapse" data-target=".navHeaderCollapse">
@@ -108,6 +108,9 @@
 		        <div class="container">	    
 			        <form action="register.php" method="post">
 					    <fieldset>
+						<div class="row">
+					    <div class="col-md-offset-3 col-md-6">
+						
 						<h2>Sign up</h2>
 						    <div class="form-group">
 						        <label> First name*:</label>
@@ -152,8 +155,10 @@
 							    <input class="form-control" name="confirm_password" placeholder="Confirm Password" type="password"/>
 						    </div>
 						    <div class="form-group">
-							    <button type="submit" class="btn btn-default">Register</button>
+							    <button type="submit" class="btn btn-success">Register</button>
 						    </div>
+							</div>
+							</div>
 					    </fieldset>
 				    </form>			
 		        </div>
