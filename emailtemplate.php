@@ -66,68 +66,62 @@
 			</div>
 		</div>		 
 		<!-- End Nav bar -------------------------------------------------------------------------->
-		
-		<!-- Main page ---------------------------------------------------------------------------->
+		<!-- Main page ---------------------------------------------------------------------------->		
+		<?php
+			if (isset($_SESSION["user_id"])) {
+				$id = $_SESSION["user_id"];
+				if (isset($_POST['to']) && isset($_POST["subject"]) && isset($_POST["text"])) {
+					$to = $_POST['to'];
+					$subject = $_POST['subject'];
+					$text = $_POST['text'];
+					// Set content-type header for sending HTML email
+					$headers = "MIME-Version: 1.0" . "\r\n";
+					$headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
 
-		<!--Create Table -------------------------------------------------------------------------->
-		<div class="container">	    
-	
-			<h2>Claimed Tasks</h2>
-                              
-			<table class="table table-responsive table-hover">
-				<thead>
-					<tr>
-						<th>#</th>
-						<th>Title</th>
-						<th>Deadline Submission</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr>
-						<?php
-							if (isset($_SESSION["user_id"])) {
-								$id = $_SESSION["user_id"];
-								try {
-									$dbh = new PDO("mysql:host=localhost;dbname=group18", "root", "");		
-									$query = "SELECT idStatusName FROM statusname WHERE Status = 'CLAIMED'";
-									$stmt = $dbh->prepare($query);
-									$stmt->execute();
-									$row = $stmt->fetch(PDO::FETCH_ASSOC);
-									$idstatus = $row['idStatusName'];
-									//printf("status %s",$idstatus);
-									$query = "SELECT idTaskNo, Title, DeadlineSubmission FROM task join status on task.idTaskNo = status.TaskNo WHERE StatusName=:StatusName ORDER BY DeadlineSubmission desc";
-									$stmt = $dbh->prepare($query);
-									//$stmt->bindValue(':StatusName', $idstatus,);
-									$stmt->execute(array(':StatusName' => $idstatus));
-									while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) { 
-										$taskno = $row['idTaskNo'];
-										//printf("taskno %s",$taskno);
-										$title = $row['Title'];
-										/*printf("title %s",$title);*/
-										$deadlinesubmission = $row['DeadlineSubmission'];
-										if ($row) {
-											printf("<tr><td><a href='emailcompletecancel.php?taskno=$taskno'> %s </a></td> <td> <a href='emailcompletecancel.php?taskno=$taskno'> %s</a></td><td>%s</td></tr>", $row['idTaskNo'],$row['Title'],$row['DeadlineSubmission']);
-										}
-									}
-								} catch (PDOException $exception) {
-										printf("Connection error: %s", $exception->getMessage());
-								}
-							}
-						?>	  
-					</tr>
-				</tbody>
-			</table>
-		</div>
-		<!-- End Table ---------------------------------------------------------------------------->
-		<!-- End Main ----------------------------------------------------------------------------->
-						   
-				
-		<!-- Footer ------------------------------------------------------------------------------->
-		<footer id="footer">				
-		</footer>
+					// Additional headers
+					$headers .= 'From: CodexWorld<sender@example.com>' . "\r\n";
+					//$headers .= 'Cc: welcome@example.com' . "\r\n";
+					//$headers .= 'Bcc: welcome2@example.com' . "\r\n";
 
-		<!-- Scripts ------------------------------------------------------------------------------>	
-	    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-		<script src="js/bootstrap.js"></script>
-	</body>
-</html>
+					// Send email
+					if(mail($to,$subject,$text,$headers))
+						printf("<h2>Email sent successfully</h2>");
+					else {
+						printf("<h2>Email failure</h2>");
+					}
+				}
+			}
+		?>
+		<!-- Email Template Form ------------------------------------------------------------------>
+		<?php
+			if (!isset($_POST) || count ($_POST) <= 0) {
+		?>
+				<div class="container">	    
+			        <form enctype="multipart/form-data" action="emailtemplate.php" method="post" >
+					    <fieldset>
+						    <div class="col-md-6">
+						    <h2>Email</h2>
+						    <div class="form-group">
+						        <label> To:</label>
+							    <input autofocus class="form-control" name="to" placeholder="To" type="text" "required" />
+						    </div>
+						    <div class="form-group">
+						        <label> Subject:</label>
+							    <input autofocus class="form-control" name="subject" placeholder="Subject" type="text" "required" />
+						    </div>
+							<div class="form-group">
+						        <label> Text:</label>
+							    <textarea class="form-control" rows="5" name="text" placeholder="Text" type="text" "required" ></textarea>               
+						    </div>
+						    <div class="form-group">
+							    <button type="submit" class="btn btn-success">Send</button>
+						    </div>
+							</div>
+					    </fieldset>
+				    </form>
+                </div>
+		<?php
+				}
+		?>		
+
+        <!-- End Task Form ------------------------------------------------------------------------>

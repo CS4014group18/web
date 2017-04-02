@@ -56,8 +56,10 @@
 								}
 								printf("<li><a href=\"./logout.php\">Logout</a></li>");	
 							} else {
-								printf("<li><a href=\"./login.php\">Login</a></li>");
-								printf("<li><a href=\"./register.php\">Register</a></li>");
+								header("Location: index.php"); /* Redirect browser */
+								exit();
+								//printf("<li><a href=\"./login.php\">Login</a></li>");
+								//printf("<li><a href=\"./register.php\">Register</a></li>");
 							}
 							?>
 					</ul>
@@ -94,7 +96,7 @@
 									$idStatus = $row['StatusName'];
 									$title = $row['Title'];
 									if ($row) {
-										printf("<tr><td><a href='taskpage.php?taskno=$taskno'> %s </a></td> <td> <a href='taskpage.php?taskno=$taskno'> %s</a></td>", $row['idTaskNo'],$row['Title']);
+										printf("<tr><td><a href='claimrate.php?taskno=$taskno&status=$idStatus'> %s </a></td> <td> <a href='claimrate.php?taskno=$taskno&status=$idStatus'> %s</a></td>", $row['idTaskNo'],$row['Title']);
 										/*$query = "SELECT Status FROM statusname WHERE idStatusName = :StatusName";
 										$stmt = $dbh->prepare($query);
 										$stmt->bindValue('StatusName',$idStatus);

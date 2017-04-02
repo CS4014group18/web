@@ -56,8 +56,10 @@
 								}
 								printf("<li><a href=\"./logout.php\">Logout</a></li>");	
 							} else {
-								printf("<li><a href=\"./login.php\">Login</a></li>");
-								printf("<li><a href=\"./register.php\">Register</a></li>");
+								header("Location: index.php"); /* Redirect browser */
+								exit();
+								//printf("<li><a href=\"./login.php\">Login</a></li>");
+								//printf("<li><a href=\"./register.php\">Register</a></li>");
 							}
 							?>
 					</ul>
@@ -97,7 +99,7 @@
 									$taskno = $row['idTaskNo'];
 									$title = $row['Title'];
 									if ($row) {
-										printf("<tr><td><a href='taskpage.php?taskno=$taskno'> %s </a></td> <td> <a href='taskpage.php?taskno=$taskno'> %s</a></td></tr>", $row['idTaskNo'],$row['Title']);	
+										printf("<tr><td><a href='viewflaggedtask.php?taskno=$taskno'> %s </a></td> <td> <a href='viewflaggedtask.php?taskno=$taskno'> %s</a></td></tr>", $row['idTaskNo'],$row['Title']);	
 									}
 								}
 							} catch (PDOException $exception) {

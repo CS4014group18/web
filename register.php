@@ -8,16 +8,16 @@
 	</head>
 	
 	<body>
-	    <!-- Header -->
+	    <!-- Header ------------------------------------------------------------------------------->
 		<header id="header" class="alt">
 		</header>
 		
-		<!-- Nav bar --->
+		<!-- Nav bar ------------------------------------------------------------------------------>
 		<div class="navbar navbar-inverse navbar-static-top">
 		    <div class="container">			 
 			    <a href="index.php" class="navbar-brand">Proofreading Website</a>
 				 
-				<!-- Mobile responsiveness -->
+				<!-- Mobile responsiveness -------------------------------------------------------->
 				<button class="navbar-toggle" data-toggle="collapse" data-target=".navHeaderCollapse">
 				    <span class="icon-bar"></span>
 					<span class="icon-bar"></span>
@@ -102,7 +102,7 @@
                 }
             ?>
 		
-		    <!-- Register form -->
+		    <!-- Register form -------------------------------------------------------------------->
 		    <?php 
 			    if (!isset($_POST) || count($_POST) == 0) { ?>		
 		        <div class="container">	    
@@ -163,14 +163,14 @@
 				    </form>			
 		        </div>
 		    <?php } ?>	
-		    <!-- End Form -->
+		    <!-- End Form ------------------------------------------------------------------------->
 		</div>
 		
-	    <!-- Footer -->
+	    <!-- Footer ------------------------------------------------------------------------------->
 		<footer id="footer">				
 		</footer>
 		
-		<!-- Scripts -->		
+		<!-- Scripts ------------------------------------------------------------------------------>		
 	    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 		<script src="js/bootstrap.js"></script>
 	</body>

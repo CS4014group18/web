@@ -16,7 +16,7 @@
 		<div class="navbar navbar-inverse navbar-static-top">
 		    <div class="container">
 			 
-			    <a href="index.php" class="navbar-brand">Proofreading Website</a>
+			    <a href="" class="navbar-brand">Proofreading Website</a>
 				 
 				<!-- Mobile responsiveness -------------------------------------------------------->
 				<button class="navbar-toggle" data-toggle="collapse" data-target=".navHeaderCollapse">
@@ -57,7 +57,10 @@
 								printf("<li><a href=\"./logout.php\">Logout</a></li>");
 								
 							} else {
-								printf("<li><a href=\"./login.php\">Login</a></li>");
+								header("Location: index.php"); /* Redirect browser */
+								exit();
+								//printf("<li><a href=\"./login.php\">Login</a></li>");
+								//printf("<li><a href=\"./Register.php\">Register</a></li>");
 							}
 						?>
 					</ul>
@@ -101,11 +104,11 @@
 							$affectedRows = $stmt->execute(array(':usercreated' => $id, ':title' => $title, ':type' => $type, ':description'=> $description, ':pages' => $pages, ':words' => $words, ':format' => $format, ':sample' => $sample, ':deadlineclaiming' => $deadlineclaiming, ':deadlinecompletion' => $deadlinecompletion));
 							if ($affectedRows > 0) {
 								$taskno = $dbh->lastInsertId();
-								$query = "SELECT idstatusname FROM statusname WHERE status='PENDING'";
+								$query = "SELECT idStatusName FROM statusname WHERE status='PENDING'";
 								$stmt = $dbh->prepare($query);
 								$stmt->execute();
 								$row = $stmt->fetch(PDO::FETCH_ASSOC);
-								$idstatus = $row['idstatusname'];								
+								$idstatus = $row['idStatusName'];								
 								$date = date ("Y/m/d H:i:s");
 								$query = "INSERT INTO status SET TaskNo = :taskno, StatusName = :statusname, Date = :date";
 								$stmt = $dbh->prepare($query);
@@ -168,8 +171,7 @@
 				<div class="container">	    
 			        <form enctype="multipart/form-data" action="createtask.php" method="post" >
 					    <fieldset>
-						   <div class="row">
-						    <div class="col-md-offset-3 col-md-6">
+						    <div class="col-md-6">
 						    <h2>Create Task</h2>
 						    <div class="form-group">
 						        <label> Title:</label>
@@ -226,21 +228,19 @@
 							    <button type="submit" class="btn btn-success">Create Task</button>
 						    </div>
 							</div>
-							</div>
 					    </fieldset>
 				    </form>
                 </div>
 		<?php
 				}
 		?>		
-
         <!-- End Task Form ------------------------------------------------------------------------>
 		
 		<!-- Uploadmanager ------------------------------------------------------------------------>
 		<?php 
 			if (isset($_POST) && count ($_POST) > 0) {
 				/*define ("FILEREPOSITORY","C://inetpub//wwwroot//modules//cs4014//group18//uploads"); //Set a constant*/
-				define ("FILEREPOSITORY","C://file_uploads/");
+				define ("FILEREPOSITORY","uploads/");
 				if (is_uploaded_file($_FILES['userfile']['tmp_name'])) { //file posted?
 
 					$finfo = finfo_open(FILEINFO_MIME_TYPE);
@@ -251,7 +251,7 @@
 					} else { // move uploaded file to final destination. 
 						
 						$name = $_FILES['userfile']['name'];
-						$result = move_uploaded_file($_FILES['userfile']['tmp_name'],  FILEREPOSITORY."$name");
+						$result = move_uploaded_file($_FILES['userfile']['tmp_name'],  FILEREPOSITORY."$name.pdf");
             
 						if ($result == 1) {
 							echo "<p>File successfully uploaded.</p>";

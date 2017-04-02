@@ -65,9 +65,22 @@
 				        $saltedHash = hash('sha256', $password.$siteSalt);
 		
 				        if ($passwordHash == $saltedHash) {	
-					        $_SESSION['user_id'] = $id; 
-					        header("Location:./index.php");
-							printf("<h2> Loggedin Sucessfully </h2>");
+							// check if banned
+							$dbh = new PDO("mysql:host=localhost;dbname=group18", "root", "");
+							$query = "SELECT ID FROM banned where ID = :id";
+							$stmt = $dbh->prepare($query);
+							$stmt->bindValue(':id',$id);
+							$affectedRows = $stmt->execute();
+							$row = $stmt->fetch(PDO::FETCH_ASSOC);
+							$banned = $row['ID'];
+							if ($banned == $id) {
+								printf("<h2>User %s banned</h2>",$id);
+							}
+							else {
+								$_SESSION['user_id'] = $id; 
+								header("Location:./index.php");
+								printf("<h2> Loggedin Sucessfully </h2>");
+							}
 				        }
 						else 
 						{	
