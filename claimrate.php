@@ -87,16 +87,16 @@
 										$row = $stmt->fetch(PDO::FETCH_ASSOC);
 										$idstatus1 = $row['idStatusName'];
 										if ($status == $idstatus1) {
-											$query = "SELECT UserCreated FROM task WHERE idTaskNo = :taskno";
+											$query = "SELECT ID FROM claimed WHERE TaskNo = :taskno";
 											$stmt = $dbh->prepare($query);
 											$stmt->bindValue(':taskno',$taskno);
 											$stmt->execute();
 											$row = $stmt->fetch(PDO::FETCH_ASSOC);
-											$usercreated = $row['UserCreated'];
+											$claimid = $row['ID'];
 											//printf("User Created %s",$usercreated);
-											$query = "SELECT Reputation FROM user WHERE ID = :usercreated";
+											$query = "SELECT Reputation FROM user WHERE ID = :claimid";
 											$stmt = $dbh->prepare($query);
-											$stmt->bindValue(':usercreated',$usercreated);
+											$stmt->bindValue(':claimid',$claimid);
 											$stmt->execute();
 											$row = $stmt->fetch(PDO::FETCH_ASSOC);
 											$reputation = $row['Reputation'];
@@ -105,12 +105,17 @@
 											else
 												$reputation = $reputation -5;
 											//printf("Reputation %s",$reputation);
-											$query = "UPDATE user SET Reputation = :reputation WHERE ID = :usercreated";
+											$query = "UPDATE user SET Reputation = :reputation WHERE ID = :claimid";
 											$stmt = $dbh->prepare($query);
 											$stmt->bindValue(':reputation',$reputation);
-											$stmt->bindValue(':usercreated',$usercreated);			
+											$stmt->bindValue(':claimid',$claimid);			
 											$stmt->execute();
-											printf("<h2>User %s Reputation Updated<h2>",$usercreated);
+											printf("<h2>User %s Reputation Updated<h2>",$claimid);
+											// delete task
+											$query = "DELETE FROM task WHERE idTaskNo = :taskno";
+											$stmt = $dbh->prepare($query);
+											$stmt->bindValue(':taskno',$taskno);
+											$stmt->execute();
 										}
 									} catch (PDOException $exception) {
 										printf("Connection error: %s", $exception->getMessage());

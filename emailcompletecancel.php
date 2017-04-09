@@ -86,7 +86,7 @@
 						$date = date ("Y/m/d H:i:s");
 						//printf("date %s",$date);
 						//idStatus 	TaskNo 	StatusName 	Date 
-						$query = "UPDATE status SET TaskNo = :taskno, StatusName = :statusname, Date = :date";
+						$query = "UPDATE status SET  StatusName = :statusname, Date = :date WHERE TaskNo = :taskno";
 						$stmt = $dbh->prepare($query);
 						$affectedRows = $stmt->execute(array(':taskno' => $taskno, ':statusname' => $idstatus, ':date' => $date));
 						printf("<h2>Task %s Completed</h2>",$taskno);
@@ -106,7 +106,7 @@
 						$date = date ("Y/m/d H:i:s");
 							//printf("date %s",$date);
 							//idStatus 	TaskNo 	StatusName 	Date 
-						$query = "UPDATE status SET TaskNo = :taskno, StatusName = :statusname, Date = :date";
+						$query = "UPDATE status SET StatusName = :statusname, Date = :date WHERE TaskNo = :taskno";
 						$stmt = $dbh->prepare($query);
 						$affectedRows = $stmt->execute(array(':taskno' => $taskno, ':statusname' => $idstatus, ':date' => $date));
 						$query = "SELECT Reputation FROM user WHERE ID = :id";
@@ -127,7 +127,22 @@
 						printf("Connection error: %s", $exception->getMessage());
 					}
 				} else if (isset($_POST['request'])) {
-					header("Location: emailtemplate.php");		
+						$taskno = $_POST["taskno"];
+						$dbh = new PDO("mysql:host=localhost;dbname=group18", "root", "");
+						$query = "SELECT UserCreated, Title FROM task WHERE idTaskNo = :taskno";
+						$stmt = $dbh->prepare($query);
+						$stmt->bindValue(':taskno',$taskno);	
+						$stmt->execute();
+						$row = $stmt->fetch(PDO::FETCH_ASSOC);
+						$usercreated = $row['UserCreated'];
+						$title = urlencode($row['Title']);//str_replace(' ', '%20', $row['Title']);
+						$query = "SELECT Email FROM user WHERE id = :id";
+						$stmt = $dbh->prepare($query);
+						$stmt->bindValue(':id',$usercreated);	
+						$stmt->execute();
+						$row = $stmt->fetch(PDO::FETCH_ASSOC);
+						$email = $row['Email'];
+					header("Location: emailtemplate.php?recepient=$email&title=$title");		
 				}
 			}
 		?>

@@ -95,6 +95,7 @@
 		<!-- Email Template Form ------------------------------------------------------------------>
 		<?php
 			if (!isset($_POST) || count ($_POST) <= 0) {
+									
 		?>
 				<div class="container">	    
 			        <form enctype="multipart/form-data" action="emailtemplate.php" method="post" >
@@ -102,12 +103,25 @@
 						    <div class="col-md-6">
 						    <h2>Email</h2>
 						    <div class="form-group">
+							
 						        <label> To:</label>
-							    <input autofocus class="form-control" name="to" placeholder="To" type="text" "required" />
+								<?php
+								      if (isset($_GET)) { 
+										$email = $_GET['recepient'];
+									    printf("<input autofocus class=\"form-control\" name=\"to\" placeholder=\"To\" type=\"text\" \"required\" value= %s />",$email);
+								      } else printf("<input autofocus class=\"form-control\" name=\"to\" placeholder=\"To\" type=\"text\" \"required\"/>");
+								?>
 						    </div>
 						    <div class="form-group">
 						        <label> Subject:</label>
-							    <input autofocus class="form-control" name="subject" placeholder="Subject" type="text" "required" />
+								<?php
+								      if (isset($_GET)) { 
+										$title = $_GET['title'];
+										$title = urldecode($title);
+										//printf("title %s<br>",$title);
+									    printf("<input autofocus class=\"form-control\" name=\"subject\" placeholder=\"Subject\" type=\"text\" \"required\" value= \"%s\" />",$title);
+								      } else printf("<input autofocus class=\"form-control\" name=\"subject\" placeholder=\"Subject\" type=\"text\" \"required\"/>");
+								?>
 						    </div>
 							<div class="form-group">
 						        <label> Text:</label>

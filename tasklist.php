@@ -103,11 +103,11 @@
 									$query = "SELECT idTaskNo FROM task join status on task.idTaskNo = status.TaskNo WHERE StatusName=:StatusName AND DeadLineSubmission < :date";
 									$stmt = $dbh->prepare($query);
 									$date = date ("Y/m/d H:i:s");
-									$stmt->execute(array('StatusName' => $idstatus, ':date' => $date));
+									$stmt->execute(array(':StatusName' => $idstatus, ':date' => $date));
 									$rowoutofdate = $stmt->fetchAll(PDO::FETCH_ASSOC);
 									foreach( $rowoutofdate as $row) { // change status to cancelled
 									    $taskno = $row['TaskNo'];								
-										$query = "UPDATE status SET TaskNo = :taskno, StatusName = :statusname, Date = :date";
+										$query = "UPDATE status SET  StatusName = :statusname, Date = :date WHERE TaskNo = :taskno";
 										$stmt = $dbh->prepare($query);
 										$date = date ("Y/m/d H:i:s");
 										$stmt->execute(array(':taskno' => $taskno, ':statusname' => $idstatus1, ':date' => $date));
@@ -145,18 +145,105 @@
 									$row = $stmt->fetch(PDO::FETCH_ASSOC);
 									$idstatus1 = $row['idStatusName'];
 									//printf("status %s",$idstatus);
-									$query = "SELECT idTaskNo, Title, DeadlineClaiming, DeadlineSubmission FROM task join status on task.idTaskNo = status.TaskNo WHERE StatusName=:StatusName OR StatusName=:StatusName1 AND UserCreated!=:id ORDER BY DeadlineClaiming desc";
+									$query = "SELECT idTaskNo, Title, DeadlineClaiming, DeadlineSubmission FROM task join status on task.idTaskNo = status.TaskNo WHERE (StatusName=:StatusName OR StatusName=:StatusName1) AND UserCreated!=:id ORDER BY DeadlineClaiming desc";
 									$stmt = $dbh->prepare($query);
 									$stmt->execute(array(':StatusName' => $idstatus, ':StatusName1' => $idstatus1, ':id' => $id));
-									while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) { 
-										$taskno = $row['idTaskNo'];
-										/*printf("taskno %s",$taskno);*/
-										$title = $row['Title'];
-										/*printf("title %s",$title);*/
+									$row = $stmt->fetchAll(PDO::FETCH_ASSOC);
+									/*while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) { 
+										$taskno = $row['idTaskNo'];										
+										$title = $row['Title'];										
 										$deadlineclaiming = $row['DeadlineClaiming'];
 										$deadlinesubmission = $row['DeadlineSubmission'];
 										if ($row) {
 											printf("<tr><td><a href='taskpage.php?taskno=$taskno'> %s </a></td> <td> <a href='taskpage.php?taskno=$taskno'> %s</a></td><td>%s</td><td>%s</td></tr>", $row['idTaskNo'],$row['Title'],$row['DeadlineClaiming'],$row['DeadlineSubmission']);
+										}
+									}*/
+									$displayrows = array();
+									foreach ($row as $x) {
+										$taskno = $x['idTaskNo'];
+										$query = "SELECT Tag FROM tasktags WHERE TaskNo = :TaskNo"; 
+										$stmt = $dbh->prepare($query);
+										$stmt->execute(array(':TaskNo' => $taskno));
+										$rowtasktags = $stmt->fetchAll(PDO::FETCH_ASSOC);
+										$count = 0;
+										foreach ($rowtasktags as $y) {
+											$tasktag = $y['Tag'];
+											$query = "SELECT Tag FROM usertags WHERE ID = :id and Tag = :tasktag"; 
+											$stmt = $dbh->prepare($query);
+											$stmt->execute(array(':id' => $id, ':tasktag' => $tasktag));
+											$rowusertags = $stmt->fetchAll(PDO::FETCH_ASSOC);
+											if ($rowusertags>0) {
+												$count++;	
+											}					
+										}
+										$input = array('taskno' => $taskno, 'count' => $count);	
+										array_push($displayrows, $input);
+										
+									}
+									/*
+									foreach ($displayrows as $y) {
+										printf("task no %s<br>",$y['taskno']);
+										printf("count %d<br>",$y['count']);
+									}
+									*/
+									// 4 tags match
+									foreach ($row as $x) {
+										$taskno = $x['idTaskNo'];
+										$title = $x['Title'];
+										$deadlineclaiming = $x['DeadlineClaiming'];
+										$deadlinesubmission = $x['DeadlineSubmission'];
+										foreach ($displayrows as $y) {
+											if ($taskno === $y['taskno'] && $y['count'] == 4) {
+												printf("<tr><td><a href='taskpage.php?taskno=$taskno'> %s </a></td> <td> <a href='taskpage.php?taskno=$taskno'> %s</a></td><td>%s</td><td>%s</td></tr>", $x['idTaskNo'],$x['Title'],$x['DeadlineClaiming'],$x['DeadlineSubmission']);
+											}
+										}
+									} 
+									// 3 tags match
+									foreach ($row as $x) {
+										$taskno = $x['idTaskNo'];
+										$title = $x['Title'];
+										$deadlineclaiming = $x['DeadlineClaiming'];
+										$deadlinesubmission = $x['DeadlineSubmission'];
+										foreach ($displayrows as $y) {
+											if ($taskno === $y['taskno'] && $y['count'] == 3) {
+												printf("<tr><td><a href='taskpage.php?taskno=$taskno'> %s </a></td> <td> <a href='taskpage.php?taskno=$taskno'> %s</a></td><td>%s</td><td>%s</td></tr>", $x['idTaskNo'],$x['Title'],$x['DeadlineClaiming'],$x['DeadlineSubmission']);
+											}
+										}
+									} 
+									// 2 tags match
+									foreach ($row as $x) {
+										$taskno = $x['idTaskNo'];
+										$title = $x['Title'];
+										$deadlineclaiming = $x['DeadlineClaiming'];
+										$deadlinesubmission = $x['DeadlineSubmission'];
+										foreach ($displayrows as $y) {
+											if ($taskno === $y['taskno'] && $y['count'] == 2) {
+												printf("<tr><td><a href='taskpage.php?taskno=$taskno'> %s </a></td> <td> <a href='taskpage.php?taskno=$taskno'> %s</a></td><td>%s</td><td>%s</td></tr>", $x['idTaskNo'],$x['Title'],$x['DeadlineClaiming'],$x['DeadlineSubmission']);
+											}
+										}
+									} 
+									// 1 tag match
+									foreach ($row as $x) {
+										$taskno = $x['idTaskNo'];
+										$title = $x['Title'];
+										$deadlineclaiming = $x['DeadlineClaiming'];
+										$deadlinesubmission = $x['DeadlineSubmission'];
+										foreach ($displayrows as $y) {		
+											if ($taskno === $y['taskno'] && $y['count'] == 1) {
+												printf("<tr><td><a href='taskpage.php?taskno=$taskno'> %s </a></td> <td> <a href='taskpage.php?taskno=$taskno'> %s</a></td><td>%s</td><td>%s</td></tr>", $x['idTaskNo'],$x['Title'],$x['DeadlineClaiming'],$x['DeadlineSubmission']);
+											}
+										}
+									} 
+									// rest of the list
+									foreach ($row as $x) { 
+										$taskno = $x['idTaskNo'];										
+										$title = $x['Title'];										
+										$deadlineclaiming = $x['DeadlineClaiming'];
+										$deadlinesubmission = $x['DeadlineSubmission'];
+										foreach ($displayrows as $y) {		
+											if ($taskno === $y['taskno'] && $y['count'] == 0) {
+												printf("<tr><td><a href='taskpage.php?taskno=$taskno'> %s </a></td> <td> <a href='taskpage.php?taskno=$taskno'> %s</a></td><td>%s</td><td>%s</td></tr>", $x['idTaskNo'],$x['Title'],$x['DeadlineClaiming'],$x['DeadlineSubmission']);
+											}
 										}
 									}
 								} catch (PDOException $exception) {

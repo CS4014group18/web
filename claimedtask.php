@@ -99,15 +99,14 @@
 									$stmt = $dbh->prepare($query);
 									//$stmt->bindValue(':StatusName', $idstatus,);
 									$stmt->execute(array(':StatusName' => $idstatus));
-									while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) { 
-										$taskno = $row['idTaskNo'];
+									$row = $stmt->fetchAll(PDO::FETCH_ASSOC);
+									foreach ($row as $x) { 
+										$taskno = $x['idTaskNo'];
 										//printf("taskno %s",$taskno);
-										$title = $row['Title'];
+										$title = $x['Title'];
 										/*printf("title %s",$title);*/
-										$deadlinesubmission = $row['DeadlineSubmission'];
-										if ($row) {
-											printf("<tr><td><a href='emailcompletecancel.php?taskno=$taskno'> %s </a></td> <td> <a href='emailcompletecancel.php?taskno=$taskno'> %s</a></td><td>%s</td></tr>", $row['idTaskNo'],$row['Title'],$row['DeadlineSubmission']);
-										}
+										$deadlinesubmission = $x['DeadlineSubmission'];
+										printf("<tr><td><a href='emailcompletecancel.php?taskno=$taskno'> %s </a></td> <td> <a href='emailcompletecancel.php?taskno=$taskno'> %s</a></td><td>%s</td></tr>", $x['idTaskNo'],$x['Title'],$x['DeadlineSubmission']);
 									}
 								} catch (PDOException $exception) {
 										printf("Connection error: %s", $exception->getMessage());

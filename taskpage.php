@@ -87,7 +87,7 @@
 								$date = date ("Y/m/d H:i:s");
 								//printf("date %s",$date);
 								//idStatus 	TaskNo 	StatusName 	Date 
-								$query = "UPDATE status SET TaskNo = :taskno, StatusName = :statusname, Date = :date";
+								$query = "UPDATE status SET  StatusName = :statusname, Date = :date WHERE TaskNo = :taskno";
 								$stmt = $dbh->prepare($query);
 								$affectedRows = $stmt->execute(array(':taskno' => $taskno, ':statusname' => $idstatus, ':date' => $date));
 								$query = "INSERT INTO claimed SET ID = :id, TaskNo = :taskno, Date = :date";
@@ -105,9 +105,6 @@
 								$stmt->bindValue(':reputation',$reputation);
 								$stmt->bindValue(':claimer',$id);	
 								$stmt->execute();
-								$query = "UPDATE user SET ID = :id, TaskNo = :taskno, Date = :date";
-								$stmt = $dbh->prepare($query);
-								$affectedRows = $stmt->execute(array(':id' => $id,':taskno' => $taskno, ':date' => $date));
 								printf("<h2>Task %s Claimed</h2>",$taskno);
 						} catch (PDOException $exception) {
 								printf("Connection error: %s", $exception->getMessage());
@@ -125,7 +122,7 @@
 							$date = date ("Y/m/d H:i:s");
 							//printf("date %s",$date);
 							//idStatus 	TaskNo 	StatusName 	Date 
-							$query = "UPDATE status SET TaskNo = :taskno, StatusName = :statusname, Date = :date";
+							$query = "UPDATE status SET StatusName = :statusname, Date = :date WHERE TaskNo = :taskno";
 							$stmt = $dbh->prepare($query);
 							$affectedRows = $stmt->execute(array(':taskno' => $taskno, ':statusname' => $idstatus, ':date' => $date));
 							printf("<h2>Task Status changed to inappropriate</h2>");
