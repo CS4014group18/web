@@ -16,7 +16,7 @@
 		<div class="navbar navbar-inverse navbar-static-top">
 		    <div class="container">
 			 
-			    <a href="" class="navbar-brand">Proofreading Website</a>
+			    <a href="index.php" class="navbar-brand">Proofreading Website</a>
 				 
 				<!-- Mobile responsiveness -->
 				<button class="navbar-toggle" data-toggle="collapse" data-target=".navHeaderCollapse">
@@ -39,7 +39,7 @@
 								printf("<li><a href=\"./mytask.php\">My Tasks</a></li>");
 								printf("<li><a href=\"./claimedtask.php\">Claimed Tasks</a></li>");
 								try {
-									$dbh = new PDO("mysql:host=localhost;dbname=group18", "root", "");
+									$dbh = new PDO("mysql:host=localhost;dbname=group18","group18","STREAM-suit-PLUTO-team");
 									$query = "SELECT Reputation FROM user where id = :id";									
 									$stmt = $dbh->prepare($query);
 									$stmt->bindValue(':id', $id);
@@ -77,7 +77,7 @@
 						$taskno = $_POST["taskno"];
 						//printf("Task: %s\n",$taskno);
 						try {
-								$dbh = new PDO("mysql:host=localhost;dbname=group18", "root", "");
+								$dbh = new PDO("mysql:host=localhost;dbname=group18","group18","STREAM-suit-PLUTO-team");
 								$query = "SELECT idStatusName FROM statusname WHERE status='CLAIMED'";
 								$stmt = $dbh->prepare($query);
 								$stmt->execute();
@@ -113,7 +113,7 @@
 						//inappropriate
 						$taskno = $_POST["taskno"];
 						try {
-							$dbh = new PDO("mysql:host=localhost;dbname=group18", "root", "");
+							$dbh = new PDO("mysql:host=localhost;dbname=group18","group18","STREAM-suit-PLUTO-team");
 							$query = "SELECT idStatusName FROM statusname WHERE status='INAPPROPRIATE'";
 							$stmt = $dbh->prepare($query);
 							$stmt->execute();
@@ -125,6 +125,18 @@
 							$query = "UPDATE status SET StatusName = :statusname, Date = :date WHERE TaskNo = :taskno";
 							$stmt = $dbh->prepare($query);
 							$affectedRows = $stmt->execute(array(':taskno' => $taskno, ':statusname' => $idstatus, ':date' => $date));
+							$query = "SELECT Reputation FROM user WHERE ID = :claimer";
+							$stmt = $dbh->prepare($query);
+							$stmt->bindValue(':claimer',$id);
+							$stmt->execute();
+							$row = $stmt->fetch(PDO::FETCH_ASSOC);
+							$reputation = $row['Reputation'];
+							$reputation = $reputation +2;
+							$query = "UPDATE user SET Reputation = :reputation WHERE ID = :claimer";
+							$stmt = $dbh->prepare($query);
+							$stmt->bindValue(':reputation',$reputation);
+							$stmt->bindValue(':claimer',$id);	
+							$stmt->execute();
 							printf("<h2>Task Status changed to inappropriate</h2>");
 						} catch (PDOException $exception) {
 							printf("Connection error: %s", $exception->getMessage());
@@ -145,7 +157,7 @@
 									if (isset($_GET["taskno"])) {
 										$taskno = $_GET["taskno"];
 										try {
-											$dbh = new PDO("mysql:host=localhost;dbname=group18", "root", "");
+											$dbh = new PDO("mysql:host=localhost;dbname=group18","group18","STREAM-suit-PLUTO-team");
 											$stmt = $dbh->prepare("SELECT title, description, pages, words FROM `task` WHERE idTaskno=:taskno" );
 											$stmt->bindValue(':taskno', $taskno);
 											$stmt->execute();
@@ -186,26 +198,6 @@
 								if (!isset($_POST['claim']) && !isset($_POST['inappropriate'])) {
 									if (isset($_SESSION["user_id"])) {
 										$id = $_SESSION["user_id"];
-										//printf("id %s",$id);
-										/*try {
-											$dbh = new PDO("mysql:host=localhost;dbname=group18", "root", "");
-											$query = "SELECT Reputation FROM user where id = :id";									
-											$stmt = $dbh->prepare($query);
-											$stmt->bindValue(':id', $id);
-											$stmt->execute();
-											$row = $stmt->fetch(PDO::FETCH_ASSOC);
-											$reputation = $row['Reputation'];
-											printf("<div class='form-group'>");
-											printf("<button type='submit' class='btn btn-success' name='claim'>claim</button>");
-											printf("</div>");
-											if ($reputation >= 40) {
-												printf("<div class='form-group'>");
-												printf("<button type='submit' class='btn btn-success' name='inappropriate'>Inappropriate</button>");
-												printf("</div>");
-											}
-										} catch (PDOException $exception) {
-												printf("Connection error: %s", $exception->getMessage());
-										}*/
 										printf("<div class='form-group'>");
 										printf("<button type='submit' class='btn btn-success' name='claim'>claim</button>");
 										printf("</div>");

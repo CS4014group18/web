@@ -49,7 +49,7 @@
 	    <?php   	
 		    if (isset($_POST["id"]) && isset($_POST["password"]) && trim($_POST["id"]) !='' && trim($_POST["password"]) != ''  ){
 			    try {
-				    $dbh = new PDO("mysql:host=localhost;dbname=group18", "root", "");
+				    $dbh = new PDO("mysql:host=localhost;dbname=group18","group18","STREAM-suit-PLUTO-team");
 			
 				    $id = trim($_POST["id"]);
 				    $password = $_POST["password"];	
@@ -66,7 +66,7 @@
 		
 				        if ($passwordHash == $saltedHash) {	
 							// check if banned
-							$dbh = new PDO("mysql:host=localhost;dbname=group18", "root", "");
+							$dbh = new PDO("mysql:host=localhost;dbname=group18","group18","STREAM-suit-PLUTO-team");
 							$query = "SELECT ID FROM banned where ID = :id";
 							$stmt = $dbh->prepare($query);
 							$stmt->bindValue(':id',$id);

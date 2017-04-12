@@ -39,7 +39,7 @@
 								printf("<li><a href=\"./mytask.php\">My Tasks</a></li>");
 								printf("<li><a href=\"./claimedtask.php\">Claimed Tasks</a></li>");
 								try {
-									$dbh = new PDO("mysql:host=localhost;dbname=group18", "root", "");
+									$dbh = new PDO("mysql:host=localhost;dbname=group18","group18","STREAM-suit-PLUTO-team");
 									$query = "SELECT Reputation FROM user where id = :id";									
 									$stmt = $dbh->prepare($query);
 									$stmt->bindValue(':id', $id);
@@ -77,7 +77,7 @@
 						$taskno = $_POST["taskno"];
 						//printf("Task: %s\n",$taskno);
 						try {
-								$dbh = new PDO("mysql:host=localhost;dbname=group18", "root", "");
+								$dbh = new PDO("mysql:host=localhost;dbname=group18","group18","STREAM-suit-PLUTO-team");
 								$query = "DELETE FROM task where idTaskNo = :taskno";
 								$stmt = $dbh->prepare($query);
 								$stmt->bindValue(':taskno',$taskno);
@@ -89,7 +89,7 @@
 					} else if (isset($_POST['banuser']) && isset($_POST["taskno"])) {
 						//ban user
 						try {
-							$dbh = new PDO("mysql:host=localhost;dbname=group18", "root", "");
+							$dbh = new PDO("mysql:host=localhost;dbname=group18","group18","STREAM-suit-PLUTO-team");
 							$taskno = $_POST["taskno"];
 							//printf("taskno %s",$taskno);
 							$query = "SELECT UserCreated FROM task where idTaskNo = :taskno";
@@ -108,7 +108,7 @@
 							printf("Connection error: %s", $exception->getMessage());
 						} // download sample
 					} else if (isset($_POST['download']) && isset($_POST["taskno"])) {	
-						$dbh = new PDO("mysql:host=localhost;dbname=group18", "root", "");
+						$dbh = new PDO("mysql:host=localhost;dbname=group18","group18","STREAM-suit-PLUTO-team");
 						$taskno = $_POST["taskno"];
 						//printf("taskno %s",$taskno);
 						$query = "SELECT Sample FROM task where idTaskNo = :taskno";
@@ -135,7 +135,7 @@
 									if (isset($_GET["taskno"])) {
 										$taskno = $_GET["taskno"];
 										try {
-											$dbh = new PDO("mysql:host=localhost;dbname=group18", "root", "");
+											$dbh = new PDO("mysql:host=localhost;dbname=group18","group18","STREAM-suit-PLUTO-team");
 											$stmt = $dbh->prepare("SELECT title, description, pages, words FROM `task` WHERE idTaskno=:taskno" );
 											$stmt->bindValue(':taskno', $taskno);
 											$stmt->execute();

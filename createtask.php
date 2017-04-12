@@ -16,7 +16,7 @@
 		<div class="navbar navbar-inverse navbar-static-top">
 		    <div class="container">
 			 
-			    <a href="" class="navbar-brand">Proofreading Website</a>
+			    <a href="index.php" class="navbar-brand">Proofreading Website</a>
 				 
 				<!-- Mobile responsiveness -------------------------------------------------------->
 				<button class="navbar-toggle" data-toggle="collapse" data-target=".navHeaderCollapse">
@@ -37,10 +37,9 @@
 								printf("<li class=\"active\"><a href=\"./createtask.php\">Create Task</a></li>");
 								printf("<li><a href=\"./tasklist.php\">Task Stream</a></li>");
 								printf("<li><a href=\"./mytask.php\">My Tasks</a></li>");
-								printf("<li><a href=\"./claimedtask.php\">Claimed Tasks</a></li>");
-								
+								printf("<li><a href=\"./claimedtask.php\">Claimed Tasks</a></li>");								
 								try {
-									$dbh = new PDO("mysql:host=localhost;dbname=group18", "root", "");
+									$dbh = new PDO("mysql:host=localhost;dbname=group18","group18","STREAM-suit-PLUTO-team");
 									$query = "SELECT Reputation FROM user where id = :id";									
 									$stmt = $dbh->prepare($query);
 									$stmt->bindValue(':id', $id);
@@ -96,8 +95,7 @@
 						/*printf("deadlinecompletion %s\n",$deadlinecompletion);*/
 						
 						try {
-							/*$dbh = new PDO("mysql:host=localhost;dbname=group18", "group18", "STREAM-suit-PLUTO-team");*/
-							$dbh = new PDO("mysql:host=localhost;dbname=group18", "root", "");
+							$dbh = new PDO("mysql:host=localhost;dbname=group18","group18","STREAM-suit-PLUTO-team");
 							/*idTaskNo	UserCreated	Title	Type	Description	Pages	Words	Format	Sample	DeadlineClaiming	DeadlineSubmission*/
 							$query = "INSERT INTO task SET UserCreated = :usercreated, Title = :title, Type = :type, Description = :description, Pages = :pages, Words = :words, Format = :format, Sample = :sample, DeadlineClaiming = :deadlineclaiming, DeadlineSubmission = :deadlinecompletion";
 							$stmt = $dbh->prepare($query);

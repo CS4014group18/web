@@ -60,7 +60,7 @@
 					$reputation = 0;
 		
 	                //check whether user/email alerady exists
-	                $dbh = new PDO("mysql:host=localhost;dbname=group18", "root", "");
+	                $dbh = new PDO("mysql:host=localhost;dbname=group18","group18","STREAM-suit-PLUTO-team");
 	                $stmt = $dbh->prepare("SELECT password FROM User WHERE id = ?" );
 	                $stmt->execute(array($id));
 	                $rowCount = $stmt->rowCount();
@@ -128,13 +128,13 @@
 						        <label> Major*:</label>
 							    <select autofocus class="form-control" name="subject" placeholder="Major Subject" "required" type="text" />
 							    <?php
-							    // build the dropdown list
-								$dbh = new PDO("mysql:host=localhost;dbname=group18", "root", "");
-							    foreach($dbh->query('SELECT idmajors,majornames FROM majornames') as $row) {
-								    $idmajors=$row["idmajors"];
-								    $major=$row["majornames"];
-                                    echo '<option value="' . $idmajors . '">' . $major . '</option>';
-							    }							
+									// build the dropdown list
+									$dbh = new PDO("mysql:host=localhost;dbname=group18","group18","STREAM-suit-PLUTO-team");
+									foreach($dbh->query('SELECT idmajors,majornames FROM majornames') as $row) {
+										$idmajors=$row["idmajors"];
+										$major=$row["majornames"];
+										echo '<option value="' . $idmajors . '">' . $major . '</option>';
+									}							
                                 ?>
 							    </select>
 						    </div>

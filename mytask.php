@@ -40,7 +40,7 @@
 								printf("<li class=\"active\"><a href=\"./mytask.php\">My Tasks</a></li>");
 								printf("<li><a href=\"./claimedtask.php\">Claimed Tasks</a></li>");
 								try {
-									$dbh = new PDO("mysql:host=localhost;dbname=group18", "root", "");
+									$dbh = new PDO("mysql:host=localhost;dbname=group18","group18","STREAM-suit-PLUTO-team");
 									$query = "SELECT Reputation FROM user where id = :id";									
 									$stmt = $dbh->prepare($query);
 									$stmt->bindValue(':id', $id);
@@ -86,39 +86,23 @@
 						if (isset($_SESSION["user_id"])) {
 							$id = $_SESSION["user_id"];
 							try {
-								$dbh = new PDO("mysql:host=localhost;dbname=group18", "root", "");
-								$query = "SELECT idTaskNo, Title, StatusName FROM task JOIN status ON task.idTaskNo = status.TaskNo WHERE UserCreated = :id ORDER BY DeadlineClaiming desc";
-								$stmt = $dbh->prepare($query);
-								$stmt->bindValue(':id', $id);
-								$stmt->execute();
-								while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) { 
-									$taskno = $row['idTaskNo'];
-									$idStatus = $row['StatusName'];
-									$title = $row['Title'];
-									if ($row) {
-										printf("<tr><td><a href='claimrate.php?taskno=$taskno&status=$idStatus'> %s </a></td> <td> <a href='claimrate.php?taskno=$taskno&status=$idStatus'> %s</a></td>", $row['idTaskNo'],$row['Title']);
-										/*$query = "SELECT Status FROM statusname WHERE idStatusName = :StatusName";
+									$dbh = new PDO("mysql:host=localhost;dbname=group18","group18","STREAM-suit-PLUTO-team");
+									$query = "SELECT idTaskNo, Title, StatusName FROM task JOIN status ON task.idTaskNo = status.TaskNo WHERE UserCreated = :id ORDER BY DeadlineClaiming desc";
+									$stmt = $dbh->prepare($query);
+									$stmt->bindValue(':id', $id);
+									$stmt->execute();
+									$row = $stmt->fetchAll(PDO::FETCH_ASSOC);
+									foreach ($row as $x) { 
+										$taskno = $x['idTaskNo'];
+										//$title = $x['Title'];
+										$idStatus = $x['StatusName'];								
+										$query = "SELECT Status FROM statusname WHERE idStatusName = :StatusName";
 										$stmt = $dbh->prepare($query);
 										$stmt->bindValue('StatusName',$idStatus);
 										$stmt->execute();
 										$row = $stmt->fetch(PDO::FETCH_ASSOC);
-										$idstatus = $row['Status'];*/
-										switch ($idStatus) {
-											case 1: printf("<td>PENDING</td></tr>");
-													break;
-											case 2: printf("<td>CLAIMED</td></tr>");
-													break;
-											case 3: printf("<td>UNCLAIMED</td></tr>");
-													break;
-											case 4: printf("<td>CANCELLED</td></tr>");
-													break;
-											case 5: printf("<td>INAPPROPRIATE</td></tr>");
-													break;	
-											case 6: printf("<td>COMPLETED</td></tr>");
-													break;		
-										}
+										printf("<tr><td><a href='claimrate.php?taskno=$taskno&status=$idStatus'> %s </a></td> <td> <a href='claimrate.php?taskno=$taskno&status=$idStatus'> %s</a></td><td> %s</td></tr>", $x['idTaskNo'],$x['Title'],$row['Status']);
 									}
-								}
 							} catch (PDOException $exception) {
 								printf("Connection error: %s", $exception->getMessage());
 							}
@@ -127,7 +111,7 @@
 				</tbody>
 			</table>
 		</div>
-		<!-- End Main ---------------------------------------------------------------------------->
+		<!-- End Main ----------------------------------------------------------------------------->
 						   
 		<!-- Footer ------------------------------------------------------------------------------->
 		<footer id="footer">				

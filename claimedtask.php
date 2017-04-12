@@ -39,7 +39,7 @@
 								printf("<li><a href=\"./mytask.php\">My Tasks</a></li>");
 								printf("<li class=\"active\"><a href=\"./claimedtask.php\">Claimed Tasks</a></li>");
 								try {
-									$dbh = new PDO("mysql:host=localhost;dbname=group18", "root", "");
+									$dbh = new PDO("mysql:host=localhost;dbname=group18","group18","STREAM-suit-PLUTO-team");
 									$query = "SELECT Reputation FROM user where id = :id";									
 									$stmt = $dbh->prepare($query);
 									$stmt->bindValue(':id', $id);
@@ -88,7 +88,7 @@
 							if (isset($_SESSION["user_id"])) {
 								$id = $_SESSION["user_id"];
 								try {
-									$dbh = new PDO("mysql:host=localhost;dbname=group18", "root", "");		
+									$dbh = new PDO("mysql:host=localhost;dbname=group18","group18","STREAM-suit-PLUTO-team");		
 									$query = "SELECT idStatusName FROM statusname WHERE Status = 'CLAIMED'";
 									$stmt = $dbh->prepare($query);
 									$stmt->execute();
