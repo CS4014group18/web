@@ -36,6 +36,7 @@
 								else 
 								{
 								    printf("<li><a href=\"./login.php\">Login</a></li>");
+									printf("<li><a href=\"./register.php\">Register</a></li>");
 							    }
 							?>				     
 					</ul>

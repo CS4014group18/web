@@ -8,17 +8,17 @@
 	</head>
 	
 	<body>
-		<!-- Header -->
+		<!-- Header ------------------------------------------------------------------------------->
 		<header id="header" class="alt">
 		</header>
 		
-		<!-- Nav bar --->
+		<!-- Nav bar ------------------------------------------------------------------------------>
 		<div class="navbar navbar-inverse navbar-static-top">
 		    <div class="container">
 			 
 			    <a href="index.php" class="navbar-brand">Proofreading Website</a>
 				 
-				<!-- Mobile responsiveness -->
+				<!-- Mobile responsiveness -------------------------------------------------------->
 				<button class="navbar-toggle" data-toggle="collapse" data-target=".navHeaderCollapse">
 				    <span class="icon-bar"></span>
 					<span class="icon-bar"></span>
@@ -44,7 +44,7 @@
 				</div>				 
 			</div>
 		</div>		 
-		<!-- End Nav bar -->
+		<!-- End Nav bar -------------------------------------------------------------------------->
 		
 	    <?php   	
 		    if (isset($_POST["id"]) && isset($_POST["password"]) && trim($_POST["id"]) !='' && trim($_POST["password"]) != ''  ){
@@ -66,7 +66,7 @@
 		
 				        if ($passwordHash == $saltedHash) {	
 							// check if banned
-							$dbh = new PDO("mysql:host=localhost;dbname=group18","group18","STREAM-suit-PLUTO-team");
+							//$dbh = new PDO("mysql:host=localhost;dbname=group18","group18","STREAM-suit-PLUTO-team");
 							$query = "SELECT ID FROM banned where ID = :id";
 							$stmt = $dbh->prepare($query);
 							$stmt->bindValue(':id',$id);
@@ -96,40 +96,41 @@
 					}
 		    }
         ?>        
-		<!-- Login form -->
-		 <div class="container">
-				
-			    <form action="login.php" method="post">
+		<!-- Login form --------------------------------------------------------------------------->
+		 <div class="container">			
+			    <form action="login.php" id="login-form" role="form" data-toggle="validator" method="post">
 					<fieldset>
                       <div class="row">
 					    <div class="col-md-offset-3 col-md-3">
-						<h2>Login</h2>
-						<div class="form-group">
-							<input autofocus class="form-control" name="id" placeholder="ID" type="text"/>
+							<h2>Login</h2>
+							<div class="form-group">
+								<input autofocus class="form-control" name="id" placeholder="ID" pattern="^[0-9]{1,}$" type="text"/>
+							</div>
+							
+							<div class="form-group">
+								<input class="form-control" name="password" placeholder="Password" type="password"/>
+							</div>
+							
+							<div class="form-group">
+								<button type="submit" class="btn btn-success">Login</button>
+								<!--<label>Don't have account yet ! <a href="./register.php">Sign Up</a></label>-->
+							</div>
 						</div>
-						
-						<div class="form-group">
-							<input class="form-control" name="password" placeholder="Password" type="password"/>
-						</div>
-						
-						<div class="form-group">
-							<button type="submit" class="btn btn-success">Login</button>
-							<!--<label>Don't have account yet ! <a href="./register.php">Sign Up</a></label>-->
-						</div>
-						</div>
-						</div>
+					  </div>
 					</fieldset>
 				</form>			
 		</div>
-		<!-- End  Login Form -->
+		<!-- End  Login Form ---------------------------------------------------------------------->
 		
-	    <!-- Footer -->
+	    <!-- Footer ------------------------------------------------------------------------------->
 		<footer id="footer">				
 		</footer>
 		
-		<!-- Scripts -->
-        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+		<!-- Scripts ------------------------------------------------------------------------------>
+        <script src="js/jquery-3.2.1.min.js"></script>
 		<script src="js/bootstrap.js"></script>
+		<script src="js/bootstrapValidator.js"></script>
+		<script src="js/loginValidator.js"></script>
 	</body>
 </html>
 		

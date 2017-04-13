@@ -42,9 +42,9 @@
 				</div>				 
 			</div>
 		</div>		 
-		<!-- End Nav bar -->
+		<!-- End Nav bar -------------------------------------------------------------------------->
 
-		<!-- Main -->
+		<!-- Main --------------------------------------------------------------------------------->
 		<div id="main">
             <?php
                 if (isset($_POST) && count ($_POST) > 0) {
@@ -106,7 +106,7 @@
 		    <?php 
 			    if (!isset($_POST) || count($_POST) == 0) { ?>		
 		        <div class="container">	    
-			        <form action="register.php" method="post">
+			        <form action="register.php" id ="register-form" role="form" data-toggle="validator" method="post">
 					    <fieldset>
 						<div class="row">
 					    <div class="col-md-offset-3 col-md-6">
@@ -114,19 +114,19 @@
 						<h2>Sign up</h2>
 						    <div class="form-group">
 						        <label> First name*:</label>
-							    <input autofocus class="form-control" name="firstname" placeholder="First Name" "required" type="text" />
+							    <input autofocus class="form-control" name="firstname" placeholder="First Name" type="text"/>
 						    </div>
 						    <div class="form-group">
 						        <label> Last name*:</label>
-							    <input autofocus class="form-control" name="lastname" placeholder="Last Name" "required" type="text" />
+							    <input class="form-control" name="lastname" placeholder="Last Name" type="text" />
 						    </div>
 						    <div class="form-group">
 						        <label> ID*:</label>
-							    <input autofocus class="form-control" name="id" placeholder="Enter your ID" "required" type="text" />
+							    <input class="form-control" name="id" placeholder="Enter your ID" type="text" />
 						    </div>
 						    <div class="form-group">
 						        <label> Major*:</label>
-							    <select autofocus class="form-control" name="subject" placeholder="Major Subject" "required" type="text" />
+							    <select class="form-control" name="subject" placeholder="Major Subject" type="text" />
 							    <?php
 									// build the dropdown list
 									$dbh = new PDO("mysql:host=localhost;dbname=group18","group18","STREAM-suit-PLUTO-team");
@@ -134,13 +134,13 @@
 										$idmajors=$row["idmajors"];
 										$major=$row["majornames"];
 										echo '<option value="' . $idmajors . '">' . $major . '</option>';
-									}							
+							    }						
                                 ?>
 							    </select>
 						    </div>
 						    <div class="form-group">
 						        <label> Email*:</label>
-							    <input autofocus class="form-control" name="email" placeholder="Email" type="text"/>
+							    <input class="form-control" name="email" placeholder="Email" type="text"/>
 						    </div>
 						    <div class="form-group">
 						        <label> Confirm Email*:</label>
@@ -171,7 +171,10 @@
 		</footer>
 		
 		<!-- Scripts ------------------------------------------------------------------------------>		
-	    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+	    <!-- <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script> -->	
+		<script src="js/jquery-3.2.1.min.js"></script>
 		<script src="js/bootstrap.js"></script>
+		<script src="js/bootstrapValidator.js"></script>
+		<script src="js/registrationValidator.js"></script>
 	</body>
 </html>
