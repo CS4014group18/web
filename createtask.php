@@ -39,7 +39,7 @@
 								printf("<li><a href=\"./mytask.php\">My Tasks</a></li>");
 								printf("<li><a href=\"./claimedtask.php\">Claimed Tasks</a></li>");								
 								try {
-									$dbh = new PDO("mysql:host=localhost;dbname=group18","group18","STREAM-suit-PLUTO-team");
+									$dbh = new PDO("mysql:host=localhost;dbname=group18","root","");
 									$query = "SELECT Reputation FROM user where id = :id";									
 									$stmt = $dbh->prepare($query);
 									$stmt->bindValue(':id', $id);
@@ -95,7 +95,7 @@
 						/*printf("deadlinecompletion %s\n",$deadlinecompletion);*/
 						
 						try {
-							$dbh = new PDO("mysql:host=localhost;dbname=group18","group18","STREAM-suit-PLUTO-team");
+							$dbh = new PDO("mysql:host=localhost;dbname=group18","root","");
 							/*idTaskNo	UserCreated	Title	Type	Description	Pages	Words	Format	Sample	DeadlineClaiming	DeadlineSubmission*/
 							$query = "INSERT INTO task SET UserCreated = :usercreated, Title = :title, Type = :type, Description = :description, Pages = :pages, Words = :words, Format = :format, Sample = :sample, DeadlineClaiming = :deadlineclaiming, DeadlineSubmission = :deadlinecompletion";
 							$stmt = $dbh->prepare($query);
@@ -167,7 +167,7 @@
 			if (!isset($_POST) || count ($_POST) <= 0) {
 		?>
 				<div class="container">	    
-			        <form enctype="multipart/form-data" action="createtask.php" method="post" >
+			        <form enctype="multipart/form-data" id ="createtask-form" action="createtask.php" method="post" >
 					    <fieldset>
 						    <div class="col-md-6">
 						    <h2>Create Task</h2>
@@ -181,43 +181,43 @@
 						    </div>
 							<div class="form-group">
 						        <label> Type:</label>
-							    <input autofocus class="form-control" name="type" placeholder="type" type="text" "required" />               
+							    <input class="form-control" name="type" placeholder="type" type="text" "required" />               
 						    </div>
 						    <div class="form-group">
 						        <label> Tag 1:</label>
-							    <input autofocus class="form-control" name="tag1" placeholder="Tag 1" type="text" "required" />
+							    <input class="form-control" name="tag1" placeholder="Tag 1" type="text" "required" />
 						    </div>
 						    <div class="form-group">
 						        <label> Tag 2:</label>
-							    <input autofocus class="form-control" name="tag2" placeholder="Tag 2" type="text" "required" />		                    
+							    <input class="form-control" name="tag2" placeholder="Tag 2" type="text" "required" />		                    
 						    </div>
 						    <div class="form-group">
 						        <label> Tag 3:</label>
-							    <input autofocus class="form-control" name="tag3" placeholder="Tag 3" type="text" "required" />
+							    <input class="form-control" name="tag3" placeholder="Tag 3" type="text" "required" />
 						    </div>
 						    <div class="form-group">
 						        <label> Tag 4:</label>
-							    <input autofocus class="form-control" name="tag4" placeholder="Tag 4" type="text" "required"/>
+							    <input class="form-control" name="tag4" placeholder="Tag 4" type="text" "required"/>
 						    </div>
-						    <div class="form-group">
+						    <div class="form-group"> 
 						        <label> Number of page(s):</label>
-							    <input class="form-control" name="pages" placeholder="" type="text" "required"/>
+							    <input class="form-control" name="pages" placeholder="" type="text" />
 						    </div>
 						    <div class="form-group">
 						        <label> Number of words:</label>
-							    <input class="form-control" name="words" placeholder="" type="text" "required"/>
+							    <input class="form-control" name="words" placeholder="" type="text" />
 						    </div>
 							<div class="form-group">
 						        <label> Source format:</label>
 							    <input class="form-control" name="format" placeholder="" type="text" "required"/>
 						    </div>
-							<div class="form-group">
-						        <label> Deadline Claiming (YYYY/MM/DD HH:MM:SS):</label>
-							    <input class="form-control" name="deadline_claiming" placeholder="" type="text" "required"/>
+							<div class="form-group"> <!-- remove seconds?-->
+						        <label> Deadline Claiming (YYYY-MM-DD HH:MM:SS):</label>
+							    <input class="form-control" name="deadline_claiming" placeholder="" type="text" />
 						    </div>
-							<div class="form-group">
-						        <label> Deadline Completion (YYYY/MM/DD HH:MM:SS):</label>
-							    <input class="form-control" name="deadline_completion" placeholder="" type="text" "required"/>
+							<div class="form-group"> <!-- remove seconds? -->
+						        <label> Deadline Completion (YYYY-MM-DD HH:MM:SS):</label>
+							    <input class="form-control" name="deadline_completion" placeholder="" type="text" />
 						    </div>
 							<div class="form-group">
 							<input type="file" name="userfile" value="" />
@@ -268,8 +268,10 @@
 		<footer id="footer">				
 		</footer>
 
-		<!-- Scripts -->	
-	    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+		<!-- Scripts ------------------------------------------------------------------------------>	
+	    <script src="js/jquery-3.2.1.min.js"></script>
 		<script src="js/bootstrap.js"></script>
+		<script src="js/bootstrapValidator.js"></script>
+		<script src="js/createtaskValidator.js"></script>
 	</body>
 </html>
