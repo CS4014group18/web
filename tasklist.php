@@ -39,7 +39,7 @@
 								printf("<li><a href=\"./mytask.php\">My Tasks</a></li>");
 								printf("<li><a href=\"./claimedtask.php\">Claimed Tasks</a></li>");
 								try {
-									$dbh = new PDO("mysql:host=localhost;dbname=group18","group18","STREAM-suit-PLUTO-team");
+									$dbh = new PDO("mysql:host=localhost;dbname=group18","root","");
 									$query = "SELECT Reputation FROM user where id = :id";									
 									$stmt = $dbh->prepare($query);
 									$stmt->bindValue(':id', $id);
@@ -89,7 +89,7 @@
 							if (isset($_SESSION["user_id"])) {
 								$id = $_SESSION["user_id"];
 								try {
-									$dbh = new PDO("mysql:host=localhost;dbname=group18","group18","STREAM-suit-PLUTO-team");
+									$dbh = new PDO("mysql:host=localhost;dbname=group18","root","");
 									$query = "SELECT idStatusName FROM statusname WHERE Status = 'CLAIMED'";
 									$stmt = $dbh->prepare($query);
 									$stmt->execute();
@@ -99,25 +99,25 @@
 									$stmt = $dbh->prepare($query);
 									$stmt->execute();
 									$row = $stmt->fetch(PDO::FETCH_ASSOC);
-									$idstatus1 = $row['idStatusName'];
+									$idstatus1 = $row['idStatusName']; 
 									$query = "SELECT idTaskNo FROM task join status on task.idTaskNo = status.TaskNo WHERE StatusName=:StatusName AND DeadLineSubmission < :date";
 									$stmt = $dbh->prepare($query);
 									$date = date ("Y/m/d H:i:s");
 									$stmt->execute(array(':StatusName' => $idstatus, ':date' => $date));
 									$rowoutofdate = $stmt->fetchAll(PDO::FETCH_ASSOC);
-									foreach( $rowoutofdate as $row) { // change status to cancelled
-									    $taskno = $row['TaskNo'];								
+									foreach( $rowoutofdate as $row) { // change status to cancelled todo delete from claimed table? - leave it
+									    $taskno = $row['idTaskNo'];								
 										$query = "UPDATE status SET  StatusName = :statusname, Date = :date WHERE TaskNo = :taskno";
 										$stmt = $dbh->prepare($query);
 										$date = date ("Y/m/d H:i:s");
 										$stmt->execute(array(':taskno' => $taskno, ':statusname' => $idstatus1, ':date' => $date));
 										$query = "SELECT ID FROM claimed where TaskNo = :taskno ORDER BY date";
 										$stmt = $dbh->prepare($query);
-										$stmt->execute(array(':taskno' => $task));
+										$stmt->execute(array(':taskno' => $taskno));
 										$rowid = $stmt->fetch(PDO::FETCH_ASSOC);
 										$query = "SELECT Reputation FROM user WHERE ID = :id";
 										$stmt = $dbh->prepare($query);
-										$stmt->bindValue(':id',$rowid);
+										$stmt->bindValue(':id',$rowid['ID']);
 										$stmt->execute();
 										$rowrep = $stmt->fetch(PDO::FETCH_ASSOC);
 										$reputation = $rowrep['Reputation'];
@@ -126,14 +126,14 @@
 										$query = "UPDATE user SET Reputation = :reputation WHERE ID = :id";
 										$stmt = $dbh->prepare($query);
 										$stmt->bindValue(':reputation',$reputation);
-										$stmt->bindValue(':id',$rowid);			
+										$stmt->bindValue(':id',$rowid['ID']);			
 										$stmt->execute();
 									}			
-									//delete out of date tasks
-									$query = "DELETE FROM task WHERE DeadlineClaiming < :date";
+									//don't delete out of date deadline claiming tasks 
+									/*$query = "DELETE FROM task WHERE DeadlineClaiming < :date ";
 									$stmt = $dbh->prepare($query);
 									$date = date ("Y/m/d H:i:s");
-									$stmt->execute(array(':date' => $date));
+									$stmt->execute(array(':date' => $date));*/
 									$query = "SELECT idStatusName FROM statusname WHERE Status = 'CANCELLED'";
 									$stmt = $dbh->prepare($query);
 									$stmt->execute();
@@ -144,10 +144,11 @@
 									$stmt->execute();
 									$row = $stmt->fetch(PDO::FETCH_ASSOC);
 									$idstatus1 = $row['idStatusName'];
+									$date = date ("Y/m/d H:i:s");
 									//printf("status %s",$idstatus);
-									$query = "SELECT idTaskNo, Title, DeadlineClaiming, DeadlineSubmission FROM task join status on task.idTaskNo = status.TaskNo WHERE (StatusName=:StatusName OR StatusName=:StatusName1) AND UserCreated!=:id ORDER BY DeadlineClaiming desc";
+									$query = "SELECT idTaskNo, Title, DeadlineClaiming, DeadlineSubmission FROM task join status on task.idTaskNo = status.TaskNo WHERE (StatusName=:StatusName OR StatusName=:StatusName1) AND UserCreated!=:id  AND DeadlineClaiming > :date ORDER BY DeadlineClaiming";
 									$stmt = $dbh->prepare($query);
-									$stmt->execute(array(':StatusName' => $idstatus, ':StatusName1' => $idstatus1, ':id' => $id));
+									$stmt->execute(array(':StatusName' => $idstatus, ':StatusName1' => $idstatus1, ':id' => $id, ':date' => $date));
 									$row = $stmt->fetchAll(PDO::FETCH_ASSOC);
 									/*while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) { 
 										$taskno = $row['idTaskNo'];										

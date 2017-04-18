@@ -60,10 +60,12 @@
 					$reputation = 0;
 		
 	                //check whether user/email alerady exists
-	                $dbh = new PDO("mysql:host=localhost;dbname=group18","group18","STREAM-suit-PLUTO-team");
+	                $dbh = new PDO("mysql:host=localhost;dbname=group18","root","");
 	                $stmt = $dbh->prepare("SELECT password FROM User WHERE id = ?" );
 	                $stmt->execute(array($id));
 	                $rowCount = $stmt->rowCount();
+					// code missing need to stop registration if id already exists
+					
 	                if ($passOne != $passTwo) { //in case Javascript is disabled.
 		                printf("<h2> Passwords do not match. </h2>");
 	                } 
@@ -96,6 +98,7 @@
 					                setcookie(session_name(),'',0,'/');
 					                session_regenerate_id(true);
 								}
+								// code missing user wass not registered
 			                }
 		                }
 	                }
@@ -129,7 +132,7 @@
 							    <select class="form-control" name="subject" placeholder="Major Subject" type="text" />
 							    <?php
 									// build the dropdown list
-									$dbh = new PDO("mysql:host=localhost;dbname=group18","group18","STREAM-suit-PLUTO-team");
+									$dbh = new PDO("mysql:host=localhost;dbname=group18","root","");
 									foreach($dbh->query('SELECT idmajors,majornames FROM majornames') as $row) {
 										$idmajors=$row["idmajors"];
 										$major=$row["majornames"];

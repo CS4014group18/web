@@ -39,7 +39,7 @@
 								printf("<li><a href=\"./mytask.php\">My Tasks</a></li>");
 								printf("<li><a href=\"./claimedtask.php\">Claimed Tasks</a></li>");
 								try {
-									$dbh = new PDO("mysql:host=localhost;dbname=group18","group18","STREAM-suit-PLUTO-team");
+									$dbh = new PDO("mysql:host=localhost;dbname=group18","root","");
 									$query = "SELECT Reputation FROM user where id = :id";									
 									$stmt = $dbh->prepare($query);
 									$stmt->bindValue(':id', $id);
@@ -77,7 +77,7 @@
 						$taskno = $_POST["taskno"];
 						//printf("Task: %s\n",$taskno);
 						try {
-								$dbh = new PDO("mysql:host=localhost;dbname=group18","group18","STREAM-suit-PLUTO-team");
+								$dbh = new PDO("mysql:host=localhost;dbname=group18","root","");
 								$query = "SELECT idStatusName FROM statusname WHERE status='CLAIMED'";
 								$stmt = $dbh->prepare($query);
 								$stmt->execute();
@@ -113,7 +113,7 @@
 						//inappropriate
 						$taskno = $_POST["taskno"];
 						try {
-							$dbh = new PDO("mysql:host=localhost;dbname=group18","group18","STREAM-suit-PLUTO-team");
+							$dbh = new PDO("mysql:host=localhost;dbname=group18","root","");
 							$query = "SELECT idStatusName FROM statusname WHERE status='INAPPROPRIATE'";
 							$stmt = $dbh->prepare($query);
 							$stmt->execute();
@@ -141,6 +141,24 @@
 						} catch (PDOException $exception) {
 							printf("Connection error: %s", $exception->getMessage());
 						}
+					} else if (isset($_POST['download']) && isset($_POST["taskno"])) {
+						try {
+							$dbh = new PDO("mysql:host=localhost;dbname=group18","root","");
+							$taskno = $_POST["taskno"];
+							//printf("taskno %s",$taskno);
+							$query = "SELECT Sample FROM task where idTaskNo = :taskno";
+							$stmt = $dbh->prepare($query);
+							$stmt->bindValue(':taskno',$taskno);
+							$affectedRows = $stmt->execute();
+							$row = $stmt->fetch(PDO::FETCH_ASSOC);
+							$sample = $row["Sample"];
+							//printf("sample %s",$sample);						
+							header("Content-disposition: attachment; filename="."\"".$sample."\"");
+							header("Content-type: application/pdf");
+							readfile("C://XAMPP/htdocs/uploads/".$sample);
+						} catch (PDOException $exception) {
+							printf("Connection error: %s", $exception->getMessage());
+						}	
 					} else {	
 					//no button pressed
 					}
@@ -157,13 +175,13 @@
 									if (isset($_GET["taskno"])) {
 										$taskno = $_GET["taskno"];
 										try {
-											$dbh = new PDO("mysql:host=localhost;dbname=group18","group18","STREAM-suit-PLUTO-team");
-											$stmt = $dbh->prepare("SELECT title, description, pages, words FROM `task` WHERE idTaskno=:taskno" );
+											$dbh = new PDO("mysql:host=localhost;dbname=group18","root","");
+											$stmt = $dbh->prepare("SELECT title, description, type, pages, words, format FROM `task` WHERE idTaskno=:taskno" );
 											$stmt->bindValue(':taskno', $taskno);
 											$stmt->execute();
 											$row = $stmt->fetch(PDO::FETCH_ASSOC);
-									if ($row) {
-												printf("<h2>Title: %s </h2><h2>Description:</h2> <h2>%s</h2>", $row["title"], $row["description"]);
+											if ($row) {								
+												printf("<h2>Title: %s </h2><h2>Description:</h2> <h2>%s</h2><h2>Type %s</h2>", $row["title"], $row["description"], $row["type"]);
 												$stmt = $dbh->prepare("SELECT Tag FROM `tasktags` WHERE TaskNo = :taskno");
 												$stmt->bindValue(':taskno', $taskno);
 												//printf("taskno %s",$taskno);
@@ -181,7 +199,7 @@
 													printf("<h2>Tag%s: %s<h2>",$i,$description);
 													$i++;
 												}
-												printf("<h2>Pages: %s </h2><h2>Words: %s</h2>", $row["pages"], $row["words"]);
+												printf("<h2>Pages: %s </h2><h2>Words: %s</h2><h2>Format %s", $row["pages"], $row["words"], $row["format"]);
 												printf("<input type='hidden' name='taskno' value=%s />",$taskno);								
 											} else {
 												printf("Task not found.");
@@ -204,7 +222,9 @@
 										printf("<div class='form-group'>");
 										printf("<button type='submit' class='btn btn-success' name='inappropriate'>Inappropriate</button>");
 										printf("</div>");
-										
+										printf("<div class='form-group'>");
+										printf("<button type='submit' class='btn btn-success' name='download'>Download Sample</button>");
+										printf("</div>");								
 									}
 								}
 							?>	

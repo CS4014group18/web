@@ -40,7 +40,7 @@
 								printf("<li><a href=\"./mytask.php\">My Tasks</a></li>");
 								printf("<li><a href=\"./claimedtask.php\">Claimed Tasks</a></li>");
 								try {
-									$dbh = new PDO("mysql:host=localhost;dbname=group18","group18","STREAM-suit-PLUTO-team");
+									$dbh = new PDO("mysql:host=localhost;dbname=group18","root","");
 									$query = "SELECT Reputation FROM user where id = :id";									
 									$stmt = $dbh->prepare($query);
 									$stmt->bindValue(':id', $id);
@@ -85,13 +85,13 @@
 						if (isset($_SESSION["user_id"])) {
 							$id = $_SESSION["user_id"];
 							try {
-								$dbh = new PDO("mysql:host=localhost;dbname=group18","group18","STREAM-suit-PLUTO-team");
+								$dbh = new PDO("mysql:host=localhost;dbname=group18","root","");
 								$query = "SELECT idStatusName FROM statusname WHERE Status = 'INAPPROPRIATE'";
 								$stmt = $dbh->prepare($query);
 								$stmt->execute();
 								$row = $stmt->fetch(PDO::FETCH_ASSOC);
 								$idstatus = $row['idStatusName'];
-								$query = "SELECT idTaskNo, Title, StatusName FROM task JOIN status ON task.idTaskNo = status.TaskNo WHERE StatusName = :StatusName ORDER BY DeadlineClaiming desc";
+								$query = "SELECT idTaskNo, Title, StatusName FROM task JOIN status ON task.idTaskNo = status.TaskNo WHERE StatusName = :StatusName ORDER BY DeadlineClaiming";
 								$stmt = $dbh->prepare($query);
 								$stmt->bindValue(':StatusName', $idstatus);
 								$stmt->execute();

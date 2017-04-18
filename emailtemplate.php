@@ -39,7 +39,7 @@
 								printf("<li><a href=\"./mytask.php\">My Tasks</a></li>");
 								printf("<li class=\"active\"><a href=\"./claimedtask.php\">Claimed Tasks</a></li>");
 								try {
-									$dbh = new PDO("mysql:host=localhost;dbname=group18","group18","STREAM-suit-PLUTO-team");
+									$dbh = new PDO("mysql:host=localhost;dbname=group18","root","");
 									$query = "SELECT Reputation FROM user where id = :id";									
 									$stmt = $dbh->prepare($query);
 									$stmt->bindValue(':id', $id);
@@ -108,8 +108,8 @@
 								<?php
 								      if (isset($_GET)) { 
 										$email = $_GET['recepient'];
-									    printf("<input autofocus class=\"form-control\" name=\"to\" placeholder=\"To\" type=\"text\" \"required\" value= %s />",$email);
-								      } else printf("<input autofocus class=\"form-control\" name=\"to\" placeholder=\"To\" type=\"text\" \"required\"/>");
+									    printf("<input class=\"form-control\" name=\"to\" placeholder=\"To\" type=\"text\" \"required\" value= %s />",$email);
+								      } else printf("<input class=\"form-control\" name=\"to\" placeholder=\"To\" type=\"text\" \"required\"/>");
 								?>
 						    </div>
 						    <div class="form-group">
@@ -119,13 +119,13 @@
 										$title = $_GET['title'];
 										$title = urldecode($title);
 										//printf("title %s<br>",$title);
-									    printf("<input autofocus class=\"form-control\" name=\"subject\" placeholder=\"Subject\" type=\"text\" \"required\" value= \"%s\" />",$title);
-								      } else printf("<input autofocus class=\"form-control\" name=\"subject\" placeholder=\"Subject\" type=\"text\" \"required\"/>");
+									    printf("<input class=\"form-control\" name=\"subject\" placeholder=\"Subject\" type=\"text\" \"required\" value= \"%s\" />",$title);
+								      } else printf("<input class=\"form-control\" name=\"subject\" placeholder=\"Subject\" type=\"text\" \"required\"/>");
 								?>
 						    </div>
 							<div class="form-group">
 						        <label> Text:</label>
-							    <textarea class="form-control" rows="5" name="text" placeholder="Text" type="text" "required" ></textarea>               
+							    <textarea autofocus class="form-control" rows="5" name="text" placeholder="Text" type="text" "required" ></textarea>               
 						    </div>
 						    <div class="form-group">
 							    <button type="submit" class="btn btn-success">Send</button>

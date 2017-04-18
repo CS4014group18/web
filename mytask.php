@@ -40,7 +40,7 @@
 								printf("<li class=\"active\"><a href=\"./mytask.php\">My Tasks</a></li>");
 								printf("<li><a href=\"./claimedtask.php\">Claimed Tasks</a></li>");
 								try {
-									$dbh = new PDO("mysql:host=localhost;dbname=group18","group18","STREAM-suit-PLUTO-team");
+									$dbh = new PDO("mysql:host=localhost;dbname=group18","root","");
 									$query = "SELECT Reputation FROM user where id = :id";									
 									$stmt = $dbh->prepare($query);
 									$stmt->bindValue(':id', $id);
@@ -86,8 +86,29 @@
 						if (isset($_SESSION["user_id"])) {
 							$id = $_SESSION["user_id"];
 							try {
-									$dbh = new PDO("mysql:host=localhost;dbname=group18","group18","STREAM-suit-PLUTO-team");
-									$query = "SELECT idTaskNo, Title, StatusName FROM task JOIN status ON task.idTaskNo = status.TaskNo WHERE UserCreated = :id ORDER BY DeadlineClaiming desc";
+									$dbh = new PDO("mysql:host=localhost;dbname=group18","root","");
+									$query = "SELECT idStatusName FROM statusname WHERE Status = 'UNCLAIMED'";
+									$stmt = $dbh->prepare($query);
+									$stmt->execute();
+									$row = $stmt->fetch(PDO::FETCH_ASSOC);
+									$idstatus = $row['idStatusName'];
+									$query = "SELECT idStatusName FROM statusname WHERE Status = 'PENDING'";
+									$stmt = $dbh->prepare($query);
+									$stmt->execute();
+									$row = $stmt->fetch(PDO::FETCH_ASSOC);
+									$idstatus1 = $row['idStatusName'];
+									$query = "SELECT idTaskNo FROM task join status on task.idTaskNo = status.TaskNo WHERE StatusName=:StatusName AND DeadLineClaiming < :date";
+									$stmt = $dbh->prepare($query);
+									$date = date ("Y/m/d H:i:s");
+									$stmt->execute(array(':StatusName' => $idstatus1, ':date' => $date));
+									$rowoutofdate = $stmt->fetchAll(PDO::FETCH_ASSOC);
+									foreach( $rowoutofdate as $row) { // change status to UNCLAIMED
+									    $taskno = $row['idTaskNo'];								
+										$query = "UPDATE status SET  StatusName = :statusname, Date = :date WHERE TaskNo = :taskno";
+										$stmt = $dbh->prepare($query);
+										$stmt->execute(array(':statusname' => $idstatus, ':date' => $date, ':taskno' => $taskno));
+									}
+									$query = "SELECT idTaskNo, Title, StatusName FROM task JOIN status ON task.idTaskNo = status.TaskNo WHERE UserCreated = :id ORDER BY DeadlineClaiming";
 									$stmt = $dbh->prepare($query);
 									$stmt->bindValue(':id', $id);
 									$stmt->execute();
@@ -100,7 +121,7 @@
 										$stmt = $dbh->prepare($query);
 										$stmt->bindValue('StatusName',$idStatus);
 										$stmt->execute();
-										$row = $stmt->fetch(PDO::FETCH_ASSOC);
+										$row = $stmt->fetch(PDO::FETCH_ASSOC);  // todo no link for non completed tasks - ok just gives blanks for claimers name and email
 										printf("<tr><td><a href='claimrate.php?taskno=$taskno&status=$idStatus'> %s </a></td> <td> <a href='claimrate.php?taskno=$taskno&status=$idStatus'> %s</a></td><td> %s</td></tr>", $x['idTaskNo'],$x['Title'],$row['Status']);
 									}
 							} catch (PDOException $exception) {
