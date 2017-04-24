@@ -213,11 +213,11 @@
 						    </div>
 							<div class="form-group"> <!-- remove seconds?-->
 						        <label> Deadline Claiming (YYYY-MM-DD HH:MM:SS):</label>
-							    <input class="form-control" name="deadline_claiming" placeholder="" type="text" />
+							    <input class="form-control" name="deadline_claiming" placeholder="YYYY-MM-DD HH:MM:SS" type="text" onblur = "checkDate(this)";/>
 						    </div>
 							<div class="form-group"> <!-- remove seconds? -->
 						        <label> Deadline Completion (YYYY-MM-DD HH:MM:SS):</label>
-							    <input class="form-control" name="deadline_completion" placeholder="" type="text" />
+							    <input class="form-control" name="deadline_completion" placeholder="YYYY-MM-DD HH:MM:SS" type="text" onblur = "checkDate(this)";/>
 						    </div>
 							<div class="form-group">
 							<input type="file" name="userfile" value="" />
@@ -273,5 +273,64 @@
 		<script src="js/bootstrap.js"></script>
 		<script src="js/bootstrapValidator.js"></script>
 		<script src="js/createtaskValidator.js"></script>
+		<script type="text/javascript"></script>
+		
+		<script>
+		<!-- adapted from http://www.the-art-of-web.com/javascript/validate-date/ -->
+		  function checkDate(deadline)
+		  {
+			// regular expression to match required date and time format
+			re = /^(\d{4})-(\d{2})-(\d{2})\s+(\d{2}):(\d{2}):(\d{2})$/;
+
+			if(deadline.value != '') {
+			    if(regs = deadline.value.match(re)) {				
+			    // year value greater or equal this year 
+					var todayDate = new Date(),
+        			endDate = new Date( todayDate.getFullYear()+1, todayDate.getMonth(), todayDate.getDate());
+					if(regs[1] < todayDate.getFullYear() || regs[1] > endDate.getFullYear()) {
+					  alert("Invalid value for year: " + regs[1] + " - must be between " + todayDate.getFullYear() + " and " + endDate.getFullYear());
+					  deadline.focus();
+					  return false;
+					}				
+					// month value between 1 and 12
+					if(regs[2] < 1 || regs[2] > 12) {
+					  alert("Invalid value for month: " + regs[2]);
+					  deadline.focus();
+					  return false;
+					}
+					// day value between 1 and 31
+					if(regs[3] < 1 || regs[3] > 31) {
+					  alert("Invalid value for day: " + regs[1]);
+					  deadline.focus();
+					  return false;
+					}
+					  // 24-hour value between 0 and 23
+					if(regs[4] < 1 || regs[4] > 23) {
+						alert("Invalid value for hours: " + regs[4]);
+						deadline.focus();
+						return false;
+					  }				
+					// minute value between 0 and 59
+					if(regs[5] > 59) {
+					  alert("Invalid value for minutes: " + regs[5]);
+					  deadline.focus();
+					  return false;
+					}
+					// seconds value between 0 and 59
+					if(regs[6] > 59) {
+					  alert("Invalid value for seeconds: " + regs[6]);
+					  deadline.focus();
+					  return false;
+					}
+				}
+			} else {
+				alert("Invalid date time format: " + deadline.value);
+				deadline.focus();
+				return false;
+			}		
+			//alert("All input fields have been validated!");
+			return true;
+		  }
+		</script>
 	</body>
 </html>
