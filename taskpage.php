@@ -142,7 +142,9 @@
 							printf("Connection error: %s", $exception->getMessage());
 						}
 					} else if (isset($_POST['download']) && isset($_POST["taskno"])) {
-						try {
+						$taskno = $_POST["taskno"];
+						header("Location: tasksampledownload.php?taskno=$taskno");
+						/*try {
 							$dbh = new PDO("mysql:host=localhost;dbname=group18","group18","STREAM-suit-PLUTO-team");
 							$taskno = $_POST["taskno"];
 							//printf("taskno %s",$taskno);
@@ -164,7 +166,8 @@
 							//readfile("C://XAMPP/htdocs/uploads/".$sample);
 						} catch (PDOException $exception) {
 							printf("Connection error: %s", $exception->getMessage());
-						}	
+						}*/
+							
 					} else {	
 					//no button pressed
 					}
