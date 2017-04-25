@@ -39,7 +39,7 @@
 								printf("<li><a href=\"./mytask.php\">My Tasks</a></li>");
 								printf("<li><a href=\"./claimedtask.php\">Claimed Tasks</a></li>");								
 								try {
-									$dbh = new PDO("mysql:host=localhost;dbname=group18","root","");
+									$dbh = new PDO("mysql:host=localhost;dbname=group18","group18","STREAM-suit-PLUTO-team");
 									$query = "SELECT Reputation FROM user where id = :id";									
 									$stmt = $dbh->prepare($query);
 									$stmt->bindValue(':id', $id);
@@ -73,7 +73,8 @@
 				if (isset($_SESSION["user_id"])) {
 					$id = $_SESSION["user_id"];
 					/*printf("id %s\n",$id);*/
-					if (isset($_POST) && count ($_POST) > 0) {
+					if (isset($_POST) && count ($_POST) > 0 && $_POST["title"] != "" && $_POST["description"] != "" && $_POST["type"] != "" && $_POST["pages"] != "" && $_POST["words"] != "" && $_POST["format"] != "" && $_POST["userfile"] != "" 
+					    && $_POST["deadline_claiming"] != "" && $_POST["deadline_completion"] != "" && $_POST["tag1"] != "" && $_POST["tag2"] != "" && $_POST["tag3"] != "" && $_POST["tag4"] != "") {
 						$title = htmlspecialchars(trim($_POST["title"]));
 						/*printf("title %s\n",$title);*/
 						$description = htmlspecialchars(trim($_POST["description"]));
@@ -95,7 +96,7 @@
 						/*printf("deadlinecompletion %s\n",$deadlinecompletion);*/
 						
 						try {
-							$dbh = new PDO("mysql:host=localhost;dbname=group18","root","");
+							$dbh = new PDO("mysql:host=localhost;dbname=group18","group18","STREAM-suit-PLUTO-team");
 							/*idTaskNo	UserCreated	Title	Type	Description	Pages	Words	Format	Sample	DeadlineClaiming	DeadlineSubmission*/
 							$query = "INSERT INTO task SET UserCreated = :usercreated, Title = :title, Type = :type, Description = :description, Pages = :pages, Words = :words, Format = :format, Sample = :sample, DeadlineClaiming = :deadlineclaiming, DeadlineSubmission = :deadlinecompletion";
 							$stmt = $dbh->prepare($query);
@@ -173,51 +174,51 @@
 						    <h2>Create Task</h2>
 						    <div class="form-group">
 						        <label> Title:</label>
-							    <input autofocus class="form-control" name="title" placeholder="Title" "required" type="text" />
+							    <input autofocus class="form-control" name="title" placeholder="Title" type="text" required />
 						    </div>
 						    <div class="form-group">
 						        <label> Description:</label>
-							    <textarea class="form-control" rows="5" name="description" placeholder="Description" "required"></textarea>
+							    <textarea class="form-control" rows="5" name="description" placeholder="Description" required ></textarea>
 						    </div>
 							<div class="form-group">
 						        <label> Type:</label>
-							    <input class="form-control" name="type" placeholder="type" type="text" "required" />               
+							    <input class="form-control" name="type" placeholder="type" type="text" required />               
 						    </div>
 						    <div class="form-group">
 						        <label> Tag 1:</label>
-							    <input class="form-control" name="tag1" placeholder="Tag 1" type="text" "required" />
+							    <input class="form-control" name="tag1" placeholder="Tag 1" type="text" required />
 						    </div>
 						    <div class="form-group">
 						        <label> Tag 2:</label>
-							    <input class="form-control" name="tag2" placeholder="Tag 2" type="text" "required" />		                    
+							    <input class="form-control" name="tag2" placeholder="Tag 2" type="text" required />		                    
 						    </div>
 						    <div class="form-group">
 						        <label> Tag 3:</label>
-							    <input class="form-control" name="tag3" placeholder="Tag 3" type="text" "required" />
+							    <input class="form-control" name="tag3" placeholder="Tag 3" type="text" required />
 						    </div>
 						    <div class="form-group">
 						        <label> Tag 4:</label>
-							    <input class="form-control" name="tag4" placeholder="Tag 4" type="text" "required"/>
+							    <input class="form-control" name="tag4" placeholder="Tag 4" type="text" required />
 						    </div>
 						    <div class="form-group"> 
 						        <label> Number of page(s):</label>
-							    <input class="form-control" name="pages" placeholder="" type="text" />
+							    <input class="form-control" name="pages" placeholder="" type="text" required />
 						    </div>
 						    <div class="form-group">
 						        <label> Number of words:</label>
-							    <input class="form-control" name="words" placeholder="" type="text" />
+							    <input class="form-control" name="words" placeholder="" type="text" required />
 						    </div>
 							<div class="form-group">
 						        <label> Source format:</label>
-							    <input class="form-control" name="format" placeholder="" type="text" "required"/>
+							    <input class="form-control" name="format" placeholder="" type="text" required/>
 						    </div>
 							<div class="form-group"> <!-- remove seconds?-->
 						        <label> Deadline Claiming (YYYY-MM-DD HH:MM:SS):</label>
-							    <input class="form-control" name="deadline_claiming" placeholder="YYYY-MM-DD HH:MM:SS" type="text" onblur = "checkDate(this)";/>
+							    <input class="form-control" name="deadline_claiming" placeholder="YYYY-MM-DD HH:MM:SS" type="text" onblur = "checkDate(this)"; required />
 						    </div>
 							<div class="form-group"> <!-- remove seconds? -->
 						        <label> Deadline Completion (YYYY-MM-DD HH:MM:SS):</label>
-							    <input class="form-control" name="deadline_completion" placeholder="YYYY-MM-DD HH:MM:SS" type="text" onblur = "checkDate(this)";/>
+							    <input class="form-control" name="deadline_completion" placeholder="YYYY-MM-DD HH:MM:SS" type="text" onblur = "checkDate(this)"; required/>
 						    </div>
 							<div class="form-group">
 							<input type="file" name="userfile" value="" />

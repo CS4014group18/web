@@ -47,7 +47,7 @@
 		<!-- Main --------------------------------------------------------------------------------->
 		<div id="main">
             <?php
-                if (isset($_POST) && count ($_POST) > 0) {
+                if (isset($_POST) && count ($_POST) > 0 && $_POST["firstname"] != "" && $_POST["lastname"] != "" && $_POST["id"] != "" && $_POST["email"] != "" && $_POST["password"] != "" ) {
 	                $firstName = htmlspecialchars(ucfirst(trim($_POST["firstname"])));
 	                $lastName = htmlspecialchars(ucfirst(trim($_POST["lastname"])));
 					$id = htmlspecialchars(trim($_POST["id"]));
@@ -60,7 +60,7 @@
 					$reputation = 0;
 		
 	                //check whether user/email alerady exists
-	                $dbh = new PDO("mysql:host=localhost;dbname=group18","root","");
+	                $dbh = new PDO("mysql:host=localhost;dbname=group18","group18","STREAM-suit-PLUTO-team");
 	                $stmt = $dbh->prepare("SELECT password FROM User WHERE id = ?" );
 	                $stmt->execute(array($id));
 	                $rowCount = $stmt->rowCount();
@@ -98,11 +98,11 @@
 					                setcookie(session_name(),'',0,'/');
 					                session_regenerate_id(true);
 								}
-								// code missing user wass not registered
+								else printf("<h2>Registration Failure</h2>");
 			                }
 		                }
 	                }
-                }
+                } else printf("<h2>Registration Failure</h2>");
             ?>
 		
 		    <!-- Register form -------------------------------------------------------------------->
@@ -117,22 +117,22 @@
 						<h2>Sign up</h2>
 						    <div class="form-group">
 						        <label> First name*:</label>
-							    <input autofocus class="form-control" name="firstname" placeholder="First Name" type="text"/>
+							    <input autofocus class="form-control" name="firstname" placeholder="First Name" type="text" required/>
 						    </div>
 						    <div class="form-group">
 						        <label> Last name*:</label>
-							    <input class="form-control" name="lastname" placeholder="Last Name" type="text" />
+							    <input class="form-control" name="lastname" placeholder="Last Name" type="text" required/>
 						    </div>
 						    <div class="form-group">
 						        <label> ID*:</label>
-							    <input class="form-control" name="id" placeholder="Enter your ID" type="text" />
+							    <input class="form-control" name="id" placeholder="Enter your ID" type="text" required/>
 						    </div>
 						    <div class="form-group">
 						        <label> Major*:</label>
-							    <select class="form-control" name="subject" placeholder="Major Subject" type="text" />
+							    <select class="form-control" name="subject" placeholder="Major Subject" type="text" required/>
 							    <?php
 									// build the dropdown list
-									$dbh = new PDO("mysql:host=localhost;dbname=group18","root","");
+									$dbh = new PDO("mysql:host=localhost;dbname=group18","group18","STREAM-suit-PLUTO-team");
 									foreach($dbh->query('SELECT idmajors,majornames FROM majornames') as $row) {
 										$idmajors=$row["idmajors"];
 										$major=$row["majornames"];
@@ -143,19 +143,19 @@
 						    </div>
 						    <div class="form-group">
 						        <label> Email*:</label>
-							    <input class="form-control" name="email" placeholder="Email" type="text"/>
+							    <input class="form-control" name="email" placeholder="Email" type="text" required/>
 						    </div>
 						    <div class="form-group">
 						        <label> Confirm Email*:</label>
-							    <input class="form-control" name="confirm_email" placeholder="Confirm email" type="text"/>
+							    <input class="form-control" name="confirm_email" placeholder="Confirm email" type="text" required/>
 						    </div>
 						    <div class="form-group">
 						        <label> Password*:</label>
-							    <input class="form-control" name="password" placeholder="Password" type="password"/>
+							    <input class="form-control" name="password" placeholder="Password" type="password" required/>
 						    </div>
 						    <div class="form-group">
 						        <label> Confirm Password*:</label>
-							    <input class="form-control" name="confirm_password" placeholder="Confirm Password" type="password"/>
+							    <input class="form-control" name="confirm_password" placeholder="Confirm Password" type="password" required/>
 						    </div>
 						    <div class="form-group">
 							    <button type="submit" class="btn btn-success">Register</button>
