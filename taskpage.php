@@ -39,7 +39,7 @@
 								printf("<li><a href=\"./mytask.php\">My Tasks</a></li>");
 								printf("<li><a href=\"./claimedtask.php\">Claimed Tasks</a></li>");
 								try {
-									$dbh = new PDO("mysql:host=localhost;dbname=group18","root","");
+									$dbh = new PDO("mysql:host=localhost;dbname=group18","group18","STREAM-suit-PLUTO-team");
 									$query = "SELECT Reputation FROM user where id = :id";									
 									$stmt = $dbh->prepare($query);
 									$stmt->bindValue(':id', $id);
@@ -77,7 +77,7 @@
 						$taskno = $_POST["taskno"];
 						//printf("Task: %s\n",$taskno);
 						try {
-								$dbh = new PDO("mysql:host=localhost;dbname=group18","root","");
+								$dbh = new PDO("mysql:host=localhost;dbname=group18","group18","STREAM-suit-PLUTO-team");
 								$query = "SELECT idStatusName FROM statusname WHERE status='CLAIMED'";
 								$stmt = $dbh->prepare($query);
 								$stmt->execute();
@@ -113,7 +113,7 @@
 						//inappropriate
 						$taskno = $_POST["taskno"];
 						try {
-							$dbh = new PDO("mysql:host=localhost;dbname=group18","root","");
+							$dbh = new PDO("mysql:host=localhost;dbname=group18","group18","STREAM-suit-PLUTO-team");
 							$query = "SELECT idStatusName FROM statusname WHERE status='INAPPROPRIATE'";
 							$stmt = $dbh->prepare($query);
 							$stmt->execute();
@@ -143,7 +143,7 @@
 						}
 					} else if (isset($_POST['download']) && isset($_POST["taskno"])) {
 						try {
-							$dbh = new PDO("mysql:host=localhost;dbname=group18","root","");
+							$dbh = new PDO("mysql:host=localhost;dbname=group18","group18","STREAM-suit-PLUTO-team");
 							$taskno = $_POST["taskno"];
 							//printf("taskno %s",$taskno);
 							$query = "SELECT Sample FROM task where idTaskNo = :taskno";
@@ -152,10 +152,11 @@
 							$affectedRows = $stmt->execute();
 							$row = $stmt->fetch(PDO::FETCH_ASSOC);
 							$sample = $row["Sample"];
-							//printf("sample %s",$sample);						
-							header("Content-disposition: attachment; filename="."\"".$sample."\"");
+							printf("sample %s",$sample);						
+							header('Content-disposition: attachment; filename='."\"".$sample."\"");
 							header("Content-type: application/pdf");
-							readfile("C://XAMPP/htdocs/uploads/".$sample);
+							readfile("uploads/".$sample);
+							//readfile("C://XAMPP/htdocs/uploads/".$sample);
 						} catch (PDOException $exception) {
 							printf("Connection error: %s", $exception->getMessage());
 						}	
@@ -175,7 +176,7 @@
 									if (isset($_GET["taskno"])) {
 										$taskno = $_GET["taskno"];
 										try {
-											$dbh = new PDO("mysql:host=localhost;dbname=group18","root","");
+											$dbh = new PDO("mysql:host=localhost;dbname=group18","group18","STREAM-suit-PLUTO-team");
 											$stmt = $dbh->prepare("SELECT title, description, type, pages, words, format FROM `task` WHERE idTaskno=:taskno" );
 											$stmt->bindValue(':taskno', $taskno);
 											$stmt->execute();

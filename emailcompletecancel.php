@@ -39,7 +39,7 @@
 								printf("<li><a href=\"./mytask.php\">My Tasks</a></li>");
 								printf("<li class=\"active\"><a href=\"./claimedtask.php\">Claimed Tasks</a></li>");
 								try {
-									$dbh = new PDO("mysql:host=localhost;dbname=group18","root","");
+									$dbh = new PDO("mysql:host=localhost;dbname=group18","group18","STREAM-suit-PLUTO-team");
 									$query = "SELECT Reputation FROM user where id = :id";									
 									$stmt = $dbh->prepare($query);
 									$stmt->bindValue(':id', $id);
@@ -76,7 +76,7 @@
 					$taskno = $_POST["taskno"];
 					//printf("Task: %s\n",$taskno);
 					try {
-						$dbh = new PDO("mysql:host=localhost;dbname=group18","root","");
+						$dbh = new PDO("mysql:host=localhost;dbname=group18","group18","STREAM-suit-PLUTO-team");
 						$query = "SELECT idStatusName FROM statusname WHERE status='COMPLETED'";
 						$stmt = $dbh->prepare($query);
 						$stmt->execute();
@@ -97,7 +97,7 @@
 					//cancel
 					$taskno = $_POST["taskno"];
 					try {
-						$dbh = new PDO("mysql:host=localhost;dbname=group18","root","");
+						$dbh = new PDO("mysql:host=localhost;dbname=group18","group18","STREAM-suit-PLUTO-team");
 						$query = "SELECT idStatusName FROM statusname WHERE status='CANCELLED'";
 						$stmt = $dbh->prepare($query);
 						$stmt->execute();
@@ -128,7 +128,7 @@
 					}
 				} else if (isset($_POST['request'])) {
 						$taskno = $_POST["taskno"];
-						$dbh = new PDO("mysql:host=localhost;dbname=group18","root","");
+						$dbh = new PDO("mysql:host=localhost;dbname=group18","group18","STREAM-suit-PLUTO-team");
 						$query = "SELECT UserCreated, Title FROM task WHERE idTaskNo = :taskno";
 						$stmt = $dbh->prepare($query);
 						$stmt->bindValue(':taskno',$taskno);	

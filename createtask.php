@@ -73,7 +73,7 @@
 				if (isset($_SESSION["user_id"])) {
 					$id = $_SESSION["user_id"];
 					/*printf("id %s\n",$id);*/
-					if (isset($_POST) && count ($_POST) > 0 && $_POST["title"] != "" && $_POST["description"] != "" && $_POST["type"] != "" && $_POST["pages"] != "" && $_POST["words"] != "" && $_POST["format"] != "" && $_POST["userfile"] != "" 
+					if (isset($_POST) && count ($_POST) > 0 && $_POST["title"] != "" && $_POST["description"] != "" && $_POST["type"] != "" && $_POST["pages"] != "" && $_POST["words"] != "" && $_POST["format"] != "" //&& $_POST["userfile"] != "" 
 					    && $_POST["deadline_claiming"] != "" && $_POST["deadline_completion"] != "" && $_POST["tag1"] != "" && $_POST["tag2"] != "" && $_POST["tag3"] != "" && $_POST["tag4"] != "") {
 						$title = htmlspecialchars(trim($_POST["title"]));
 						/*printf("title %s\n",$title);*/
@@ -87,9 +87,11 @@
 						/*printf("words %s\n",$words);*/
 						$format = htmlspecialchars(trim($_POST["format"]));
 						/*printf("format %s\n",$format);*/
-						if (isset($_POST["userfile"])) {
+						
+						/*if (isset($_POST["userfile"])) {
 							$sample = htmlspecialchars(trim($_POST["userfile"]));
-						} else $sample = $_FILES['userfile']['name'];
+						} else */
+						$sample = $_FILES['userfile']['name'];
 						$deadlineclaiming = htmlspecialchars(trim($_POST["deadline_claiming"]));
 						/*printf("deadlineclaiming %s\n",$deadlineclaiming);*/
 						$deadlinecompletion = htmlspecialchars(trim($_POST["deadline_completion"]));
@@ -154,7 +156,9 @@
 									$stmt = $dbh->prepare($query);
 									$affectedRows = $stmt->execute(array(':id' => $id, ':tagno' => $tagno ));
 								}
-							}printf("<h2>Task Created</h2>");
+							}
+							if (isset($taskno)) printf("<h2>Task %s Created</h2>",$taskno);
+							else printf("<h2>Task Creation Failure</h2>");
 							
 						} catch (PDOException $exception) {
 							printf("Connection error: %s", $exception->getMessage());			
@@ -221,7 +225,7 @@
 							    <input class="form-control" name="deadline_completion" placeholder="YYYY-MM-DD HH:MM:SS" type="text" onblur = "checkDate(this)"; required/>
 						    </div>
 							<div class="form-group">
-							<input type="file" name="userfile" value="" />
+							<input type="file" name="userfile" />
 							</div>
 						    <div class="form-group">
 							    <button type="submit" class="btn btn-success">Create Task</button>
@@ -250,7 +254,7 @@
 					} else { // move uploaded file to final destination. 
 						
 						$name = $_FILES['userfile']['name'];
-						$result = move_uploaded_file($_FILES['userfile']['tmp_name'],  FILEREPOSITORY."$name.pdf");
+						$result = move_uploaded_file($_FILES['userfile']['tmp_name'],  FILEREPOSITORY."$name");
             
 						if ($result == 1) {
 							echo "<p>File successfully uploaded.</p>";

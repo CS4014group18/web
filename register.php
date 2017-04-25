@@ -47,62 +47,64 @@
 		<!-- Main --------------------------------------------------------------------------------->
 		<div id="main">
             <?php
-                if (isset($_POST) && count ($_POST) > 0 && $_POST["firstname"] != "" && $_POST["lastname"] != "" && $_POST["id"] != "" && $_POST["email"] != "" && $_POST["password"] != "" ) {
-	                $firstName = htmlspecialchars(ucfirst(trim($_POST["firstname"])));
-	                $lastName = htmlspecialchars(ucfirst(trim($_POST["lastname"])));
-					$id = htmlspecialchars(trim($_POST["id"]));
-					$major = $_POST["subject"];
-	                $email = trim(strtolower($_POST["email"]));
-	                $passOne = $_POST["password"];
-	                $passTwo = $_POST["confirm_password"];
-					$emailOne = $_POST["email"];
-	                $emailTwo = $_POST["confirm_email"];
-					$reputation = 0;
-		
-	                //check whether user/email alerady exists
-	                $dbh = new PDO("mysql:host=localhost;dbname=group18","group18","STREAM-suit-PLUTO-team");
-	                $stmt = $dbh->prepare("SELECT password FROM User WHERE id = ?" );
-	                $stmt->execute(array($id));
-	                $rowCount = $stmt->rowCount();
-					// code missing need to stop registration if id already exists
-					
-	                if ($passOne != $passTwo) { //in case Javascript is disabled.
-		                printf("<h2> Passwords do not match. </h2>");
-	                } 
-					else 
-					{
-						if ($emailOne != $emailTwo) { //in case Javascript is disabled.
-						    printf("<h2> Email address does not match. </h2>");
+                if (isset($_POST) && count ($_POST) > 0 ) {
+					if ($_POST["firstname"] != "" && $_POST["lastname"] != "" && $_POST["id"] != "" && $_POST["email"] != "" && $_POST["password"] != "" ) {
+						$firstName = htmlspecialchars(ucfirst(trim($_POST["firstname"])));
+						$lastName = htmlspecialchars(ucfirst(trim($_POST["lastname"])));
+						$id = htmlspecialchars(trim($_POST["id"]));
+						$major = $_POST["subject"];
+						$email = trim(strtolower($_POST["email"]));
+						$passOne = $_POST["password"];
+						$passTwo = $_POST["confirm_password"];
+						$emailOne = $_POST["email"];
+						$emailTwo = $_POST["confirm_email"];
+						$reputation = 0;
+			
+						//check whether user/email alerady exists
+						$dbh = new PDO("mysql:host=localhost;dbname=group18","group18","STREAM-suit-PLUTO-team");
+						$stmt = $dbh->prepare("SELECT password FROM User WHERE id = ?" );
+						$stmt->execute(array($id));
+						$rowCount = $stmt->rowCount();
+						// code missing need to stop registration if id already exists
+						
+						if ($passOne != $passTwo) { //in case Javascript is disabled.
+							printf("<h2> Passwords do not match. </h2>");
 						} 
 						else 
 						{
-		                    if ($rowCount > 0) { 
-			                    printf("<h2> An account already exists with that ID.</h2>");
-		                    } 
+							if ($emailOne != $emailTwo) { //in case Javascript is disabled.
+								printf("<h2> Email address does not match. </h2>");
+							} 
 							else 
 							{
-			                    $query = "INSERT INTO user SET id = :id, email = :email, firstname = :firstname, lastname = :lastname, password = :password, reputation = :reputation, major = :major";
-			                    $stmt = $dbh->prepare($query);
-			                    $siteSalt  = "proofreader";
-			                    $saltedHash = hash('sha256', $passOne.$siteSalt);
-			                    $affectedRows = $stmt->execute(array(':id' => $id, ':email' => $email, ':firstname' => $firstName, ':lastname' => $lastName, ':password' => $saltedHash, ':reputation' => $reputation, ':major' => $major));
-			
-			                    if ($affectedRows > 0) {
-					                $insertId = $dbh->lastInsertId();
-					                printf("<h2> Welcome %s! Please <a href=\"./login.php\"> login </a> to proceed. </h2>", $firstName);
-							        //logout first
-							        /*http://php.net/manual/en/function.session-unset.php*/
-					                session_unset();
-					                session_destroy();
-					                session_write_close();
-					                setcookie(session_name(),'',0,'/');
-					                session_regenerate_id(true);
+								if ($rowCount > 0) { 
+									printf("<h2> An account already exists with that ID.</h2>");
+								} 
+								else 
+								{
+									$query = "INSERT INTO user SET id = :id, email = :email, firstname = :firstname, lastname = :lastname, password = :password, reputation = :reputation, major = :major";
+									$stmt = $dbh->prepare($query);
+									$siteSalt  = "proofreader";
+									$saltedHash = hash('sha256', $passOne.$siteSalt);
+									$affectedRows = $stmt->execute(array(':id' => $id, ':email' => $email, ':firstname' => $firstName, ':lastname' => $lastName, ':password' => $saltedHash, ':reputation' => $reputation, ':major' => $major));
+				
+									if ($affectedRows > 0) {
+										$insertId = $dbh->lastInsertId();
+										printf("<h2> Welcome %s! Please <a href=\"./login.php\"> login </a> to proceed. </h2>", $firstName);
+										//logout first
+										/*http://php.net/manual/en/function.session-unset.php*/
+										session_unset();
+										session_destroy();
+										session_write_close();
+										setcookie(session_name(),'',0,'/');
+										session_regenerate_id(true);
+									}
+									else printf("<h2>Registration Failure</h2>");
 								}
-								else printf("<h2>Registration Failure</h2>");
-			                }
-		                }
-	                }
-                } else printf("<h2>Registration Failure</h2>");
+							}
+						}
+					} else printf("<h2>Registration Failure</h2>");
+                } 
             ?>
 		
 		    <!-- Register form -------------------------------------------------------------------->
