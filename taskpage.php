@@ -152,10 +152,15 @@
 							$affectedRows = $stmt->execute();
 							$row = $stmt->fetch(PDO::FETCH_ASSOC);
 							$sample = $row["Sample"];
-							printf("sample %s",$sample);						
-							header('Content-disposition: attachment; filename='."\"".$sample."\"");
+							//printf("sample %s",$sample);	
+							header("Cache-Control: private");
+							header("Content-Transfer-Encoding: binary");					
+							header("Content-disposition: attachment; filename="."\"".$sample."\"");
 							header("Content-type: application/pdf");
-							readfile("uploads/".$sample);
+							ob_flush();
+							flush();
+							
+							readfile("uploads/".$sample); // file is being corrupted html is appended at start of file see http://stackoverflow.com/questions/37159150/php-how-to-solve-that-html-page-source-is-appending-to-the-download-file
 							//readfile("C://XAMPP/htdocs/uploads/".$sample);
 						} catch (PDOException $exception) {
 							printf("Connection error: %s", $exception->getMessage());
