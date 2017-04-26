@@ -116,46 +116,47 @@
 								$stmt = $dbh->prepare($query);
 								$stmt->execute(array(':taskno' => $taskno, ':statusname' => $idstatus, ':date' => $date));
 								//printf("taskno %s",$taskno);
-							}
-						
-							$tags = array($_POST["tag1"], $_POST["tag2"], $_POST["tag3"], $_POST["tag4"]);
 							
-							for ($x = 0; $x < 4; $x++) {
-								//search first for tag 
-								unset($tagno);
-								$query = "SELECT idtags,description FROM tags WHERE description = ?";
-								$stmt = $dbh->prepare($query);
-								$stmt->execute(array($tags[$x]));
-								while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {        // while loop not needed? only one or no rows returned
-									$desc = $row['description'];
-									$tagno = $row['idtags'];
-								}
-								if (!isset($tagno)) { 
-								// insert into tags
-									$query = "INSERT INTO tags SET description = :tag";
-									$stmt = $dbh->prepare($query);
-									$affectedRows = $stmt->execute(array(':tag' => $tags[$x]));						
-									//if ($affectedRows > 0) {
-									$tagno = $dbh->lastInsertId();
-								    //printf("tagno %s",$tagno);
-									//}
-								}
-								//printf("tagno %s",$tagno);
-								// insert into tasktags
-								$query = "INSERT INTO tasktags SET taskno = :taskno, tag = :tagno";
-								$stmt = $dbh->prepare($query);
-								$affectedRows = $stmt->execute(array(':taskno' => $taskno, ':tagno' => $tagno ));						
 						
-								// insert into usertags
+								$tags = array($_POST["tag1"], $_POST["tag2"], $_POST["tag3"], $_POST["tag4"]);
 								
-								$query = "SELECT * from usertags WHERE id = :id and tag = :tagno";
-								$stmt = $dbh->prepare($query);
-								$stmt->execute(array(':id' => $id, ':tagno' => $tagno ));
-								$affectedRows = $stmt->rowCount();
-								if ($affectedRows == 0) {
-									$query = "INSERT INTO usertags SET id = :id, tag = :tagno";
+								for ($x = 0; $x < 4; $x++) {
+									//search first for tag 
+									unset($tagno);
+									$query = "SELECT idtags,description FROM tags WHERE description = ?";
 									$stmt = $dbh->prepare($query);
-									$affectedRows = $stmt->execute(array(':id' => $id, ':tagno' => $tagno ));
+									$stmt->execute(array($tags[$x]));
+									while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {        // while loop not needed? only one or no rows returned
+										$desc = $row['description'];
+										$tagno = $row['idtags'];
+									}
+									if (!isset($tagno)) { 
+									// insert into tags
+										$query = "INSERT INTO tags SET description = :tag";
+										$stmt = $dbh->prepare($query);
+										$affectedRows = $stmt->execute(array(':tag' => $tags[$x]));						
+										//if ($affectedRows > 0) {
+										$tagno = $dbh->lastInsertId();
+										//printf("tagno %s",$tagno);
+										//}
+									}
+									//printf("tagno %s",$tagno);
+									// insert into tasktags
+									$query = "INSERT INTO tasktags SET taskno = :taskno, tag = :tagno";
+									$stmt = $dbh->prepare($query);
+									$affectedRows = $stmt->execute(array(':taskno' => $taskno, ':tagno' => $tagno ));						
+							
+									// insert into usertags
+									
+									$query = "SELECT * from usertags WHERE id = :id and tag = :tagno";
+									$stmt = $dbh->prepare($query);
+									$stmt->execute(array(':id' => $id, ':tagno' => $tagno ));
+									$affectedRows = $stmt->rowCount();
+									if ($affectedRows == 0) {
+										$query = "INSERT INTO usertags SET id = :id, tag = :tagno";
+										$stmt = $dbh->prepare($query);
+										$affectedRows = $stmt->execute(array(':id' => $id, ':tagno' => $tagno ));
+									}
 								}
 							}
 							if (isset($taskno)) printf("<h2>Task %s Created</h2>",$taskno);
