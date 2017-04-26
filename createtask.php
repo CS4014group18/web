@@ -78,6 +78,7 @@
 						$title = htmlspecialchars(trim($_POST["title"]));
 						/*printf("title %s\n",$title);*/
 						$description = htmlspecialchars(trim($_POST["description"]));
+						$description = substr($description,0,200);
 						/*printf("description %s\n",$description);*/
 						$type = htmlspecialchars(trim($_POST["type"]));
 						/*printf("type %s\n",$type);*/
@@ -134,10 +135,10 @@
 									$query = "INSERT INTO tags SET description = :tag";
 									$stmt = $dbh->prepare($query);
 									$affectedRows = $stmt->execute(array(':tag' => $tags[$x]));						
-									if ($affectedRows > 0) {
-										$tagno = $dbh->lastInsertId();
-										//printf("tagno %s",$tagno);
-									}
+									//if ($affectedRows > 0) {
+									$tagno = $dbh->lastInsertId();
+								    //printf("tagno %s",$tagno);
+									//}
 								}
 								//printf("tagno %s",$tagno);
 								// insert into tasktags

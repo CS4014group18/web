@@ -65,7 +65,6 @@
 						$stmt = $dbh->prepare("SELECT password FROM User WHERE id = ?" );
 						$stmt->execute(array($id));
 						$rowCount = $stmt->rowCount();
-						// code missing need to stop registration if id already exists
 						
 						if ($passOne != $passTwo) { //in case Javascript is disabled.
 							printf("<h2> Passwords do not match. </h2>");

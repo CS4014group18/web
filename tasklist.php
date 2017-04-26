@@ -173,7 +173,8 @@
 											$stmt = $dbh->prepare($query);
 											$stmt->execute(array(':id' => $id, ':tasktag' => $tasktag));
 											$rowusertags = $stmt->fetchAll(PDO::FETCH_ASSOC);
-											if ($rowusertags>0) {
+											$retcount = $stmt->rowCount();
+											if ($retcount>0) {
 												$count++;	
 											}					
 										}
@@ -185,8 +186,8 @@
 									foreach ($displayrows as $y) {
 										printf("task no %s<br>",$y['taskno']);
 										printf("count %d<br>",$y['count']);
-									}
-									*/
+									}*/
+									
 									// 4 tags match
 									foreach ($row as $x) {
 										$taskno = $x['idTaskNo'];
