@@ -73,7 +73,7 @@
 				if (isset($_SESSION["user_id"])) {
 					$id = $_SESSION["user_id"];
 					/*printf("id %s\n",$id);*/
-					if (isset($_POST) && count ($_POST) > 0 && $_POST["title"] != "" && $_POST["description"] != "" && $_POST["type"] != "" && $_POST["pages"] != "" && $_POST["words"] != "" && $_POST["format"] != "" //&& $_POST["userfile"] != "" 
+					if (isset($_POST) && count ($_POST) > 0 && $_POST["title"] != "" && $_POST["description"] != "" && $_POST["type"] != "" && $_POST["pages"] != "" && $_POST["words"] != "" && $_POST["format"] != ""  && $_FILES['userfile']['name'] != "" 
 					    && $_POST["deadline_claiming"] != "" && $_POST["deadline_completion"] != "" && $_POST["tag1"] != "" && $_POST["tag2"] != "" && $_POST["tag3"] != "" && $_POST["tag4"] != "") {
 						$title = htmlspecialchars(trim($_POST["title"]));
 						/*printf("title %s\n",$title);*/
@@ -159,13 +159,12 @@
 									}
 								}
 							}
-							if (isset($taskno)) printf("<h2>Task %s Created</h2>",$taskno);
-							else printf("<h2>Task Creation Failure</h2>");
-							
 						} catch (PDOException $exception) {
 							printf("Connection error: %s", $exception->getMessage());			
 						}
-					}
+					} if (isset($_POST) && count ($_POST) > 0) 
+							if (isset($taskno)) printf("<h2>Task %s Created</h2>",$taskno);
+							else printf("<h2>Task Creation Failure</h2>");
 				}
         ?>
 							
